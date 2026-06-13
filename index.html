@@ -177,11 +177,15 @@
       return parseFloat(str.replace(',', '.').trim());
     }
 
-    // Returns YYYY-MM-DD string for a given Date object
+    // Returns YYYY-MM-DD string for a given Date object.
+    // Uses local time — toISOString() uses UTC which breaks in non-UTC timezones.
     function toDateStr(date) {
-      return date.toISOString().slice(0, 10);
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
     }
-
+    
     // Adds N days to a Date and returns a new Date
     function addDays(date, n) {
       const d = new Date(date);
