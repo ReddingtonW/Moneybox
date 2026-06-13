@@ -490,7 +490,7 @@
         {
           const lateSetup = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
           const lateSnap = [{ id: '9', name: 'LateOne', amount: 50, dayOfMonth: 31 }];
-          const r = Engine.calculate(lateSetup, lateSnap, '2026-05-28', '2026-07-31', '2026-06-15', 1000);
+          const r = Engine.calculate(lateSetup, lateSnap, '2026-05-28', '2026-06-27', '2026-06-15', 1000);
           // 31 June doesn't exist → resolves to 1 July
           // Today is 15 June → bill hasn't passed yet
           const checks = [
