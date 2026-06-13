@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Moneybox</title>
   <style>
-    /* ─── Reset & Base ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -20,33 +19,10 @@
       padding: 1rem;
     }
 
-    /* ─── Views ────────────────────────────────────────────────── */
     .view { display: none; width: 100%; max-width: 480px; }
     .view.active { display: block; }
 
-    /* ─── Setup View ────────────────────────────────────────────── */
-    #view-setup .card {
-      background: #1a1d27;
-      border: 1px solid #2a2d3a;
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-    }
-
-    #view-setup h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #ffffff;
-    }
-
-    #view-setup p {
-      color: #888;
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-    }
-
-    /* ─── Dashboard View ─────────────────────────────────────────── */
+    #view-setup .card,
     #view-dashboard .card {
       background: #1a1d27;
       border: 1px solid #2a2d3a;
@@ -55,6 +31,7 @@
       text-align: center;
     }
 
+    #view-setup h1,
     #view-dashboard h1 {
       font-size: 1.5rem;
       font-weight: 700;
@@ -62,13 +39,13 @@
       color: #ffffff;
     }
 
+    #view-setup p,
     #view-dashboard p {
       color: #888;
-      font-size: 0.95rem;
       margin-bottom: 1.5rem;
+      font-size: 0.95rem;
     }
 
-    /* ─── Shared Components ──────────────────────────────────────── */
     .btn {
       display: inline-block;
       padding: 0.75rem 1.5rem;
@@ -80,17 +57,9 @@
       min-height: 44px;
     }
 
-    .btn-primary {
-      background: #3b82f6;
-      color: #ffffff;
-    }
+    .btn-primary { background: #3b82f6; color: #ffffff; }
+    .btn-secondary { background: #2a2d3a; color: #f0f0f0; }
 
-    .btn-secondary {
-      background: #2a2d3a;
-      color: #f0f0f0;
-    }
-
-    /* ─── Debug Banner (Stage 0 only) ────────────────────────────── */
     #debug-banner {
       position: fixed;
       bottom: 0;
@@ -103,11 +72,44 @@
       color: #555;
       text-align: center;
     }
+
+    /* Test harness output */
+    #test-output {
+      width: 100%;
+      max-width: 600px;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+
+    #test-output h2 {
+      color: #888;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .test-result {
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #2a2d3a;
+      background: #1a1d27;
+      line-height: 1.5;
+    }
+
+    .test-result.pass { border-left: 3px solid #22c55e; }
+    .test-result.fail { border-left: 3px solid #ef4444; }
+    .test-label { font-weight: bold; }
+    .test-label.pass { color: #22c55e; }
+    .test-label.fail { color: #ef4444; }
+    .test-detail { color: #666; margin-top: 0.2rem; }
+    .test-summary { margin-top: 1rem; padding: 0.8rem; border-radius: 6px; text-align: center; font-weight: bold; }
+    .test-summary.all-pass { background: #14532d; color: #22c55e; }
+    .test-summary.has-fail { background: #450a0a; color: #ef4444; }
   </style>
 </head>
 <body>
 
-  <!-- ─── Setup View ──────────────────────────────────────────── -->
+  <!-- Setup View -->
   <div id="view-setup" class="view">
     <div class="card">
       <h1>Moneybox</h1>
@@ -118,7 +120,7 @@
     </div>
   </div>
 
-  <!-- ─── Dashboard View ─────────────────────────────────────── -->
+  <!-- Dashboard View -->
   <div id="view-dashboard" class="view">
     <div class="card">
       <h1>Dashboard</h1>
@@ -129,9 +131,16 @@
     </div>
   </div>
 
-  <!-- ─── Debug Banner ───────────────────────────────────────── -->
+  <!-- Test Harness Output (only shown with ?test param) -->
+  <div id="view-test" class="view">
+    <div id="test-output">
+      <h2>Moneybox · Engine Test Harness</h2>
+      <div id="test-results"></div>
+    </div>
+  </div>
+
   <div id="debug-banner">
-    Stage 0 shell · version check: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 1 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
   </div>
 
   <script>
@@ -139,45 +148,171 @@
 
     const APP_VERSION = '2.0';
 
+    // ─── Storage Module ──────────────────────────────────────────
     const Storage = {
       get(key) {
         try {
           const raw = localStorage.getItem(key);
           return raw ? JSON.parse(raw) : null;
-        } catch (e) {
-          console.error('Storage.get failed:', key, e);
-          return null;
-        }
+        } catch (e) { return null; }
       },
       set(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-        } catch (e) {
-          console.error('Storage.set failed:', key, e);
-        }
+        try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
       },
       remove(key) {
-        try {
-          localStorage.removeItem(key);
-        } catch (e) {
-          console.error('Storage.remove failed:', key, e);
-        }
+        try { localStorage.removeItem(key); } catch (e) {}
       },
       clear() {
         try {
-          const keys = Object.keys(localStorage).filter(k => k.startsWith('burndown_'));
-          keys.forEach(k => localStorage.removeItem(k));
-        } catch (e) {
-          console.error('Storage.clear failed:', e);
-        }
+          Object.keys(localStorage)
+            .filter(k => k.startsWith('burndown_'))
+            .forEach(k => localStorage.removeItem(k));
+        } catch (e) {}
       }
     };
 
+    // ─── Utilities ───────────────────────────────────────────────
     function parseNum(str) {
       if (typeof str !== 'string') str = String(str);
       return parseFloat(str.replace(',', '.').trim());
     }
 
+    // Returns YYYY-MM-DD string for a given Date object
+    function toDateStr(date) {
+      return date.toISOString().slice(0, 10);
+    }
+
+    // Adds N days to a Date and returns a new Date
+    function addDays(date, n) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + n);
+      return d;
+    }
+
+    // ─── Engine ──────────────────────────────────────────────────
+    const Engine = {
+
+      // Resolves a bill's actual date within a given month.
+      // If dayOfMonth doesn't exist in that month, pushes to 1st of next month.
+      resolveBillDate(year, month, dayOfMonth) {
+        const lastDay = new Date(year, month + 1, 0).getDate();
+        if (dayOfMonth > lastDay) {
+          // Push to 1st of next month
+          return new Date(year, month + 1, 1);
+        }
+        return new Date(year, month, dayOfMonth);
+      },
+
+      // Returns all bills from the snapshot with their resolved dates for a given cycle.
+      // cycleStart: Date (payday)
+      // cycleEnd: Date (day before next payday, or end of known period)
+      // bills: array from billsSnapshot
+      getBillsForCycle(cycleStart, cycleEnd, bills) {
+        const result = [];
+        const start = new Date(cycleStart);
+        const end = new Date(cycleEnd);
+
+        // Check each month that overlaps with the cycle
+        // We check the month of cycleStart and the following month to catch all bills
+        const monthsToCheck = [];
+        let cursor = new Date(start.getFullYear(), start.getMonth(), 1);
+        const endMonth = new Date(end.getFullYear(), end.getMonth(), 1);
+        while (cursor <= endMonth) {
+          monthsToCheck.push({ year: cursor.getFullYear(), month: cursor.getMonth() });
+          cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1);
+        }
+
+        bills.forEach(bill => {
+          monthsToCheck.forEach(({ year, month }) => {
+            const resolved = Engine.resolveBillDate(year, month, bill.dayOfMonth);
+            if (resolved >= start && resolved <= end) {
+              result.push({ ...bill, resolvedDate: toDateStr(resolved) });
+            }
+          });
+        });
+
+        // Sort by resolved date
+        result.sort((a, b) => a.resolvedDate.localeCompare(b.resolvedDate));
+        return result;
+      },
+
+      // Main calculation function.
+      // setup: { netPay, billsTransfer, targetBuffer }
+      // snapshot: array of bills (from billsSnapshot — NOT live bills)
+      // cycleStart: YYYY-MM-DD string (payday)
+      // cycleEnd: YYYY-MM-DD string (day before next payday)
+      // today: YYYY-MM-DD string
+      // liveBalance: number
+      calculate(setup, snapshot, cycleStart, cycleEnd, today, liveBalance) {
+        const { netPay, billsTransfer, targetBuffer } = setup;
+        const startingBalance = netPay - billsTransfer;
+
+        const cycleStartDate = new Date(cycleStart);
+        const cycleEndDate = new Date(cycleEnd);
+        const todayDate = new Date(today);
+
+        // Get all bills resolved within this cycle
+        const allBills = Engine.getBillsForCycle(cycleStartDate, cycleEndDate, snapshot);
+
+        // Split into passed and remaining
+        const passedBills = allBills.filter(b => new Date(b.resolvedDate) <= todayDate);
+        const remainingBills = allBills.filter(b => new Date(b.resolvedDate) > todayDate);
+
+        const outgoingsToDate = passedBills.reduce((sum, b) => sum + b.amount, 0);
+        const remainingOutgoings = remainingBills.reduce((sum, b) => sum + b.amount, 0);
+
+        const expectedNow = startingBalance - outgoingsToDate;
+        const projectedEnd = liveBalance - remainingOutgoings;
+        const immediateGap = liveBalance - expectedNow;
+        const endGap = projectedEnd - targetBuffer;
+
+        let status;
+        if (endGap >= 20) status = 'ON_TRACK';
+        else if (endGap >= -20) status = 'MARGINAL';
+        else status = 'OFF_TRACK';
+
+        return {
+          status,
+          startingBalance,
+          expectedNow: Math.round(expectedNow * 100) / 100,
+          immediateGap: Math.round(immediateGap * 100) / 100,
+          projectedEnd: Math.round(projectedEnd * 100) / 100,
+          endGap: Math.round(endGap * 100) / 100,
+          remainingOutgoings: Math.round(remainingOutgoings * 100) / 100,
+          passedBills,
+          remainingBills
+        };
+      },
+
+      // Generates the expected daily balance series for the burndown chart.
+      // Returns array of { date: YYYY-MM-DD, balance: number }
+      getBurndownSeries(setup, snapshot, cycleStart, cycleEnd) {
+        const { netPay, billsTransfer } = setup;
+        const startingBalance = netPay - billsTransfer;
+
+        const cycleStartDate = new Date(cycleStart);
+        const cycleEndDate = new Date(cycleEnd);
+        const allBills = Engine.getBillsForCycle(cycleStartDate, cycleEndDate, snapshot);
+
+        const series = [];
+        let balance = startingBalance;
+        let cursor = new Date(cycleStartDate);
+
+        while (cursor <= cycleEndDate) {
+          const dateStr = toDateStr(cursor);
+          // Deduct any bills falling on this day
+          allBills
+            .filter(b => b.resolvedDate === dateStr)
+            .forEach(b => { balance -= b.amount; });
+          series.push({ date: dateStr, balance: Math.round(balance * 100) / 100 });
+          cursor = addDays(cursor, 1);
+        }
+
+        return series;
+      }
+    };
+
+    // ─── Version Check ───────────────────────────────────────────
     function checkVersion() {
       const stored = Storage.get('burndown_version');
       if (stored !== APP_VERSION) {
@@ -188,6 +323,7 @@
       return true;
     }
 
+    // ─── App Controller ──────────────────────────────────────────
     const App = {
       currentView: null,
 
@@ -206,15 +342,213 @@
         document.getElementById('debug-version').textContent =
           versionOk ? `${APP_VERSION} ✓` : `wiped → ${APP_VERSION}`;
 
-        const setup = Storage.get('burndown_setup');
-        if (setup) {
-          App.showView('dashboard');
-        } else {
-          App.showView('setup');
+        // Run test harness if ?test param present
+        if (window.location.search.includes('test')) {
+          App.showView('test');
+          TestHarness.run();
+          return;
         }
+
+        const setup = Storage.get('burndown_setup');
+        App.showView(setup ? 'dashboard' : 'setup');
       }
     };
 
+    // ─── Test Harness ────────────────────────────────────────────
+    const TestHarness = {
+
+      assert(label, actual, expected, detail) {
+        const pass = Math.abs(actual - expected) < 0.01;
+        return { label, pass, actual, expected, detail };
+      },
+
+      assertEq(label, actual, expected, detail) {
+        const pass = actual === expected;
+        return { label, pass, actual, expected, detail };
+      },
+
+      render(results) {
+        const container = document.getElementById('test-results');
+        let passes = 0;
+
+        results.forEach(group => {
+          const groupDiv = document.createElement('div');
+          groupDiv.className = `test-result ${group.pass ? 'pass' : 'fail'}`;
+
+          const label = document.createElement('div');
+          label.className = `test-label ${group.pass ? 'pass' : 'fail'}`;
+          label.textContent = `${group.pass ? '✓' : '✗'} ${group.scenario}`;
+          groupDiv.appendChild(label);
+
+          group.checks.forEach(c => {
+            const detail = document.createElement('div');
+            detail.className = 'test-detail';
+            detail.textContent = `  ${c.pass ? '✓' : '✗'} ${c.label}: got ${c.actual}, expected ${c.expected}${c.detail ? ' — ' + c.detail : ''}`;
+            groupDiv.appendChild(detail);
+          });
+
+          container.appendChild(groupDiv);
+          if (group.pass) passes++;
+        });
+
+        const summary = document.createElement('div');
+        summary.className = `test-summary ${passes === results.length ? 'all-pass' : 'has-fail'}`;
+        summary.textContent = `${passes} / ${results.length} scenarios passed`;
+        container.appendChild(summary);
+      },
+
+      run() {
+        const results = [];
+
+        // Shared setup used by most scenarios
+        const setup = {
+          netPay: 2400,
+          billsTransfer: 600,
+          targetBuffer: 150
+        };
+        // startingBalance = 2400 - 600 = 1800
+
+        const snapshot = [
+          { id: '1', name: 'Rent',    amount: 800, dayOfMonth: 1  },
+          { id: '2', name: 'Phone',   amount: 40,  dayOfMonth: 10 },
+          { id: '3', name: 'Netflix', amount: 18,  dayOfMonth: 20 }
+        ];
+        // Total bills: 858
+
+        // Cycle: 28 May → 24 June (28 days)
+        const cycleStart = '2026-05-28';
+        const cycleEnd   = '2026-06-24';
+
+        // ── Scenario 1: Mid-cycle, on track ──────────────────────
+        // Today: 15 June. Passed bills: Rent (1 Jun £800), Phone (10 Jun £40) = £840
+        // expectedNow = 1800 - 840 = 960
+        // Remaining: Netflix (20 Jun £18)
+        // projectedEnd = liveBalance(1000) - 18 = 982
+        // endGap = 982 - 150 = 832 → ON_TRACK
+        {
+          const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 1000);
+          const checks = [
+            TestHarness.assertEq('status', r.status, 'ON_TRACK'),
+            TestHarness.assert('expectedNow', r.expectedNow, 960),
+            TestHarness.assert('projectedEnd', r.projectedEnd, 982),
+            TestHarness.assert('endGap', r.endGap, 832),
+            TestHarness.assert('immediateGap', r.immediateGap, 40)
+          ];
+          results.push({ scenario: 'S1: Mid-cycle, on track', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 2: Mid-cycle, off track ─────────────────────
+        // Same date, lower balance (700)
+        // projectedEnd = 700 - 18 = 682
+        // endGap = 682 - 150 = 532 → still ON_TRACK (just less money)
+        // Let's use balance 200 instead:
+        // projectedEnd = 200 - 18 = 182
+        // endGap = 182 - 150 = 32 → ON_TRACK (marginal boundary)
+        // Use balance 100:
+        // projectedEnd = 100 - 18 = 82
+        // endGap = 82 - 150 = -68 → OFF_TRACK
+        {
+          const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 100);
+          const checks = [
+            TestHarness.assertEq('status', r.status, 'OFF_TRACK'),
+            TestHarness.assert('projectedEnd', r.projectedEnd, 82),
+            TestHarness.assert('endGap', r.endGap, -68),
+            TestHarness.assert('immediateGap', r.immediateGap, -860)
+          ];
+          results.push({ scenario: 'S2: Mid-cycle, off track', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 3: Mid-cycle, marginal ──────────────────────
+        // endGap needs to be between -20 and +20
+        // projectedEnd - 150 = 10 → projectedEnd = 160
+        // liveBalance - 18 = 160 → liveBalance = 178
+        {
+          const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 178);
+          const checks = [
+            TestHarness.assertEq('status', r.status, 'MARGINAL'),
+            TestHarness.assert('endGap', r.endGap, 10)
+          ];
+          results.push({ scenario: 'S3: Mid-cycle, marginal', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 4: Bill falls today ─────────────────────────
+        // Today is 10 June (Phone bill day). Phone should count as PASSED.
+        // passedBills: Rent (1 Jun) + Phone (10 Jun) = 840
+        // expectedNow = 1800 - 840 = 960
+        {
+          const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-10', 1000);
+          const checks = [
+            TestHarness.assert('passedBills count', r.passedBills.length, 2, 'Rent + Phone both passed'),
+            TestHarness.assert('expectedNow', r.expectedNow, 960)
+          ];
+          results.push({ scenario: 'S4: Bill falls today counts as passed', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 5: Late-month bill (31st) ───────────────────
+        // Bill on 31st in June → resolves to 1st July
+        // Cycle: 28 May → 31 July to capture it
+        {
+          const lateSetup = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
+          const lateSnap = [{ id: '9', name: 'LateOne', amount: 50, dayOfMonth: 31 }];
+          const r = Engine.calculate(lateSetup, lateSnap, '2026-05-28', '2026-07-31', '2026-06-15', 1000);
+          // 31 June doesn't exist → resolves to 1 July
+          // Today is 15 June → bill hasn't passed yet
+          const checks = [
+            TestHarness.assert('remainingBills count', r.remainingBills.length, 1, '31st June → 1st July, not yet passed'),
+            TestHarness.assertEq('resolved date', r.remainingBills[0]?.resolvedDate, '2026-07-01')
+          ];
+          results.push({ scenario: 'S5: Late-month bill resolves to 1st of next month', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 6: First day of cycle ───────────────────────
+        // Today is payday (28 May). No bills have passed yet.
+        // expectedNow = 1800 - 0 = 1800
+        // Rent falls 1 June — not yet passed
+        {
+          const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-05-28', 1800);
+          const checks = [
+            TestHarness.assert('passedBills count', r.passedBills.length, 0, 'No bills passed on payday'),
+            TestHarness.assert('expectedNow', r.expectedNow, 1800),
+            TestHarness.assert('immediateGap', r.immediateGap, 0)
+          ];
+          results.push({ scenario: 'S6: First day of cycle', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 7: Last day of cycle ────────────────────────
+        // Today is 24 June. All bills passed: Rent + Phone + Netflix = 858
+        // expectedNow = 1800 - 858 = 942
+        // remainingBills = 0
+        // projectedEnd = liveBalance - 0 = liveBalance
+        {
+          const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-24', 950);
+          const checks = [
+            TestHarness.assert('passedBills count', r.passedBills.length, 3, 'All bills passed'),
+            TestHarness.assert('remainingBills count', r.remainingBills.length, 0),
+            TestHarness.assert('projectedEnd', r.projectedEnd, 950),
+            TestHarness.assert('expectedNow', r.expectedNow, 942)
+          ];
+          results.push({ scenario: 'S7: Last day of cycle', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Scenario 8: Snapshot vs live bills differ ─────────────
+        // Live bills (burndown_setup.bills) have an extra bill.
+        // Engine must use snapshot only — extra bill should NOT appear.
+        {
+          const snapOnly = [{ id: '1', name: 'Rent', amount: 800, dayOfMonth: 1 }];
+          // liveBills would have Rent + Phone, but we never pass liveBills to Engine
+          const r = Engine.calculate(setup, snapOnly, cycleStart, cycleEnd, '2026-06-15', 1000);
+          const checks = [
+            TestHarness.assert('only snapshot bills used', r.passedBills.length + r.remainingBills.length, 1,
+              'Phone not in snapshot so should not appear')
+          ];
+          results.push({ scenario: 'S8: Engine uses snapshot, not live bills', pass: checks.every(c => c.pass), checks });
+        }
+
+        TestHarness.render(results);
+      }
+    };
+
+    // ─── Single entry point ──────────────────────────────────────
     document.addEventListener('DOMContentLoaded', App.init);
   </script>
 
