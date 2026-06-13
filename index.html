@@ -195,13 +195,13 @@
       // Resolves a bill's actual date within a given month.
       // If dayOfMonth doesn't exist in that month, pushes to 1st of next month.
       resolveBillDate(year, month, dayOfMonth) {
-        const lastDay = new Date(year, month + 1, 0).getDate();
-        if (dayOfMonth > lastDay) {
-          // Push to 1st of next month
-          return new Date(year, month + 1, 1);
-        }
-        return new Date(year, month, dayOfMonth);
-      },
+  const candidate = new Date(year, month, dayOfMonth);
+  if (candidate.getMonth() !== month) {
+    // Date overflowed into next month — push to 1st of next month
+    return new Date(year, month + 1, 1);
+  }
+  return candidate;
+},
 
       // Returns all bills from the snapshot with their resolved dates for a given cycle.
       // cycleStart: Date (payday)
