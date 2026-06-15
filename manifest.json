@@ -1,0 +1,21 @@
+{
+  "name": "Moneybox",
+  "short_name": "Moneybox",
+  "description": "ADHD-friendly pay cycle tracker",
+  "start_url": "/Moneybox/",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#0f1117",
+  "icons": [
+    {
+      "src": "/Moneybox/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Moneybox/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
