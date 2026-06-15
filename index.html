@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f1117" />
   <title>Moneybox</title>
+  <link rel="manifest" href="/Moneybox/manifest.json" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -554,7 +556,15 @@
 
     // ─── Single entry point ──────────────────────────────────────
     document.addEventListener('DOMContentLoaded', App.init);
-  </script>
+
+    // ─── Service Worker Registration ─────────────────────────────
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/Moneybox/sw.js')
+          .then(() => console.log('Service worker registered'))
+          .catch(err => console.error('Service worker failed:', err));
+      });
+    }
 
 </body>
 </html>
