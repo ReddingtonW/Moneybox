@@ -141,9 +141,10 @@
     </div>
   </div>
 
-  <div id="debug-banner">
+<div id="debug-banner">
     Stage 1 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
-  </div>
+    <div id="debug-error" style="color:#ef4444;margin-top:4px;"></div>
+</div>
 
   <script>
     'use strict';
@@ -555,6 +556,11 @@
     };
 
     // ─── Single entry point ──────────────────────────────────────
+    window.addEventListener('error', e => {
+      const el = document.getElementById('debug-error');
+      if (el) el.textContent = `JS Error: ${e.message} (${e.filename}:${e.lineno})`;
+    });
+
     document.addEventListener('DOMContentLoaded', App.init);
 
     // ─── Service Worker Registration ─────────────────────────────
