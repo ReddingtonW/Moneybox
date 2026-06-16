@@ -7,6 +7,7 @@
   <title>Moneybox</title>
   <link rel="manifest" href="/Moneybox/manifest.json" />
   <style>
+    /* ─── Reset & Base ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -14,80 +15,287 @@
       background: #0f1117;
       color: #f0f0f0;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
+      padding: 1rem 1rem 4rem;
     }
 
-    .view { display: none; width: 100%; max-width: 480px; }
+    /* ─── Views ────────────────────────────────────────────────── */
+    .view { display: none; width: 100%; max-width: 480px; margin: 0 auto; }
     .view.active { display: block; }
 
-    #view-setup .card,
+    /* ─── Setup Steps ───────────────────────────────────────────── */
+    .setup-step { display: none; }
+    .setup-step.active { display: block; }
+
+    /* ─── Setup View — all CSS scoped to #view-setup ────────────── */
+
+    #view-setup .setup-card {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    #view-setup .step-label {
+      font-size: 0.75rem;
+      color: #555;
+      text-align: right;
+      margin-bottom: 0.5rem;
+    }
+
+    #view-setup .progress-bar {
+      height: 3px;
+      background: #2a2d3a;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    #view-setup .progress-fill {
+      height: 100%;
+      background: #3b82f6;
+      border-radius: 2px;
+    }
+
+    #view-setup .setup-header {
+      margin-bottom: 1.5rem;
+    }
+
+    #view-setup .setup-header h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    #view-setup .setup-header p {
+      font-size: 0.875rem;
+      color: #888;
+    }
+
+    /* Form fields */
+    #view-setup .field {
+      margin-bottom: 1.25rem;
+    }
+
+    #view-setup .field label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #ccc;
+      margin-bottom: 0.4rem;
+    }
+
+    #view-setup .field input {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      color: #f0f0f0;
+      min-height: 44px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    #view-setup .field input:focus {
+      border-color: #3b82f6;
+    }
+
+    #view-setup .field input.error {
+      border-color: #ef4444;
+    }
+
+    #view-setup .field .field-hint {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.35rem;
+    }
+
+    #view-setup .field .field-error {
+      display: none;
+      font-size: 0.8rem;
+      color: #ef4444;
+      margin-top: 0.35rem;
+    }
+
+    #view-setup .field .field-error.visible {
+      display: block;
+    }
+
+    /* Bill list */
+    #view-setup .bill-list {
+      margin-top: 1.25rem;
+      border-top: 1px solid #2a2d3a;
+      padding-top: 1rem;
+    }
+
+    #view-setup .bill-list-empty {
+      font-size: 0.875rem;
+      color: #555;
+      text-align: center;
+      padding: 0.75rem 0;
+    }
+
+    #view-setup .bill-item {
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #view-setup .bill-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    #view-setup .bill-item-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f0f0f0;
+    }
+
+    #view-setup .bill-item-detail {
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 0.2rem;
+    }
+
+    #view-setup .bill-item-short-month {
+      font-size: 0.75rem;
+      color: #f59e0b;
+      margin-top: 0.3rem;
+    }
+
+    #view-setup .btn-delete {
+      background: none;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      color: #666;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      min-height: 36px;
+      flex-shrink: 0;
+      margin-left: 0.75rem;
+    }
+
+    #view-setup .bill-confirm-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid #2a2d3a;
+    }
+
+    #view-setup .bill-confirm-row span {
+      font-size: 0.8rem;
+      color: #ef4444;
+      flex: 1;
+    }
+
+    /* Review screen */
+    #view-setup .review-section-label {
+      font-size: 0.7rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    #view-setup .review-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #1f2335;
+      font-size: 0.9rem;
+    }
+
+    #view-setup .review-row .lbl { color: #888; }
+    #view-setup .review-row .val { font-weight: 600; }
+
+    #view-setup .review-row.total {
+      border-top: 1px solid #2a2d3a;
+      border-bottom: none;
+      padding-top: 0.65rem;
+      margin-top: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    #view-setup .review-row.positive .val { color: #22c55e; }
+    #view-setup .review-row.negative .val { color: #ef4444; }
+
+    /* Warning panel */
+    #view-setup .warning-panel {
+      background: #451a03;
+      border: 1px solid #92400e;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    #view-setup .warning-panel p {
+      font-size: 0.875rem;
+      color: #fcd34d;
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    #view-setup .warning-check {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.875rem;
+      color: #fcd34d;
+      cursor: pointer;
+    }
+
+    #view-setup .warning-check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    /* Nav row */
+    #view-setup .setup-nav {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* ─── Dashboard View — scoped to #view-dashboard ────────────── */
     #view-dashboard .card {
       background: #1a1d27;
       border: 1px solid #2a2d3a;
       border-radius: 12px;
       padding: 2rem;
       text-align: center;
+      margin-top: 1.5rem;
     }
 
-    #view-setup h1,
     #view-dashboard h1 {
       font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 0.5rem;
       color: #ffffff;
+      margin-bottom: 0.5rem;
     }
 
-    #view-setup p,
     #view-dashboard p {
       color: #888;
-      margin-bottom: 1.5rem;
       font-size: 0.95rem;
+      margin-bottom: 1.5rem;
     }
 
-    .btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      border: none;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      min-height: 44px;
-    }
+    /* ─── Test View ─────────────────────────────────────────────── */
+    #view-test { padding-top: 1rem; }
 
-    .btn-primary { background: #3b82f6; color: #ffffff; }
-    .btn-secondary { background: #2a2d3a; color: #f0f0f0; }
-
-    #debug-banner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #1a1d27;
-      border-top: 1px solid #2a2d3a;
-      padding: 0.5rem 1rem;
-      font-size: 0.75rem;
-      color: #555;
-      text-align: center;
-    }
-
-    /* Test harness output */
-    #test-output {
-      width: 100%;
-      max-width: 600px;
-      font-family: monospace;
-      font-size: 0.8rem;
-    }
-
-    #test-output h2 {
-      color: #888;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
+    #test-output { width: 100%; font-family: monospace; font-size: 0.8rem; }
+    #test-output h2 { color: #888; margin-bottom: 1rem; font-size: 1rem; }
 
     .test-result {
       padding: 0.6rem 0.8rem;
@@ -104,36 +312,205 @@
     .test-label.pass { color: #22c55e; }
     .test-label.fail { color: #ef4444; }
     .test-detail { color: #666; margin-top: 0.2rem; }
-    .test-summary { margin-top: 1rem; padding: 0.8rem; border-radius: 6px; text-align: center; font-weight: bold; }
+
+    .test-summary {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: bold;
+    }
+
     .test-summary.all-pass { background: #14532d; color: #22c55e; }
     .test-summary.has-fail { background: #450a0a; color: #ef4444; }
+
+    /* ─── Shared Components ──────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      min-height: 44px;
+      width: 100%;
+      transition: opacity 0.15s;
+    }
+
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-primary   { background: #3b82f6; color: #ffffff; }
+    .btn-secondary { background: #2a2d3a; color: #f0f0f0; }
+    .btn-warning   { background: #d97706; color: #ffffff; }
+    .btn-danger    { background: #dc2626; color: #ffffff; }
+
+    .btn-back {
+      background: none;
+      border: 1px solid #2a2d3a;
+      color: #888;
+      width: auto;
+      padding: 0.75rem 1rem;
+      flex-shrink: 0;
+    }
+
+    .btn-sm {
+      width: auto;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+      min-height: 36px;
+    }
+
+    /* ─── Debug Banner ─────────────────────────────────────────── */
+    #debug-banner {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #1a1d27;
+      border-top: 1px solid #2a2d3a;
+      padding: 0.4rem 1rem;
+      font-size: 0.7rem;
+      color: #444;
+      text-align: center;
+      z-index: 100;
+    }
+
+    #debug-error { color: #ef4444; margin-top: 2px; min-height: 1em; }
   </style>
 </head>
 <body>
 
-  <!-- Setup View -->
+  <!-- ─── Setup View ──────────────────────────────────────────── -->
   <div id="view-setup" class="view">
-    <div class="card">
-      <h1>Moneybox</h1>
-      <p>Let's get you set up.</p>
-      <button class="btn btn-primary" onclick="App.showView('dashboard')">
-        Go to Dashboard →
-      </button>
-    </div>
-  </div>
 
-  <!-- Dashboard View -->
+    <!-- Step 1: Pay Details -->
+    <div id="setup-step-1" class="setup-step">
+      <div class="setup-card">
+        <div class="step-label">Step 1 of 4</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+        <div class="setup-header">
+          <h1>Pay details</h1>
+          <p>Enter your monthly pay and fixed transfers.</p>
+        </div>
+
+        <div class="field">
+          <label for="s1-net-pay">Net pay (£)</label>
+          <input id="s1-net-pay" type="text" inputmode="decimal" placeholder="e.g. 2400" />
+          <div id="s1-err-net-pay" class="field-error">Enter a valid amount greater than zero</div>
+        </div>
+
+        <div class="field">
+          <label for="s1-bills-transfer">Bills account transfer (£)</label>
+          <input id="s1-bills-transfer" type="text" inputmode="decimal" placeholder="e.g. 600" />
+          <div id="s1-err-bills-transfer" class="field-error">Enter a valid amount greater than zero</div>
+          <div class="field-hint">Fixed amount transferred to your bills account on payday.</div>
+        </div>
+
+        <div class="field">
+          <label for="s1-buffer">Target end-of-cycle buffer (£)</label>
+          <input id="s1-buffer" type="text" inputmode="decimal" placeholder="e.g. 150" />
+          <div id="s1-err-buffer" class="field-error">Enter a valid amount greater than zero</div>
+          <div class="field-hint">Minimum balance you want left at the end of each cycle.</div>
+        </div>
+
+        <div class="setup-nav">
+          <button class="btn btn-primary" onclick="Setup.submitPayDetails()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Bills Entry -->
+    <div id="setup-step-2" class="setup-step">
+      <div class="setup-card">
+        <div class="step-label">Step 2 of 4</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:50%"></div></div>
+        <div class="setup-header">
+          <h1>Monthly bills</h1>
+          <p>Add each regular payment from your main account.</p>
+        </div>
+
+        <div class="field">
+          <label for="s2-name">Bill name</label>
+          <input id="s2-name" type="text" placeholder="e.g. Spotify" autocomplete="off" />
+          <div id="s2-err-name" class="field-error">Enter a bill name</div>
+        </div>
+
+        <div class="field">
+          <label for="s2-amount">Amount (£)</label>
+          <input id="s2-amount" type="text" inputmode="decimal" placeholder="e.g. 11.99" />
+          <div id="s2-err-amount" class="field-error">Enter a valid amount greater than zero</div>
+        </div>
+
+        <div class="field">
+          <label for="s2-day">Day of month</label>
+          <input id="s2-day" type="number" min="1" max="31" placeholder="e.g. 7" />
+          <div id="s2-err-day" class="field-error">Enter a day between 1 and 31</div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="Setup.addBill()">+ Add bill</button>
+
+        <div class="bill-list" id="bill-list">
+          <div class="bill-list-empty" id="bill-list-empty">No bills added yet. You can continue without adding any.</div>
+        </div>
+
+        <div class="setup-nav">
+          <button class="btn btn-back" onclick="Setup.showStep(1)">← Back</button>
+          <button class="btn btn-primary" onclick="Setup.showReview()">Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Review -->
+    <div id="setup-step-3" class="setup-step">
+      <div class="setup-card">
+        <div class="step-label">Step 3 of 4</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:75%"></div></div>
+        <div class="setup-header">
+          <h1>Review</h1>
+          <p>Check everything before saving.</p>
+        </div>
+        <!-- Populated entirely by Setup.showReview() including nav buttons -->
+        <div id="review-content"></div>
+      </div>
+    </div>
+
+    <!-- Step 4: First Payday -->
+    <div id="setup-step-4" class="setup-step">
+      <div class="setup-card">
+        <div class="step-label">Step 4 of 4</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+        <div class="setup-header">
+          <h1>Your pay date</h1>
+          <p>When does your salary land? Can be a recent date or an upcoming one.</p>
+        </div>
+
+        <div class="field">
+          <label for="s4-payday">Pay date</label>
+          <input id="s4-payday" type="date" />
+          <div id="s4-err-payday" class="field-error">Pay dates more than 31 days ago are not supported</div>
+        </div>
+
+        <div class="setup-nav">
+          <button class="btn btn-primary" onclick="Setup.savePayday()">Let's go →</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end #view-setup -->
+
+  <!-- ─── Dashboard View ─────────────────────────────────────── -->
   <div id="view-dashboard" class="view">
     <div class="card">
       <h1>Dashboard</h1>
-      <p>Your burndown will appear here.</p>
-      <button class="btn btn-secondary" onclick="App.showView('setup')">
+      <p>Your burndown will appear here in Stage 4.</p>
+      <button class="btn btn-secondary" onclick="App.showView('setup')" style="margin-top:0.5rem">
         ← Back to Setup
       </button>
     </div>
   </div>
 
-  <!-- Test Harness Output (only shown with ?test param) -->
+  <!-- ─── Test View ───────────────────────────────────────────── -->
   <div id="view-test" class="view">
     <div id="test-output">
       <h2>Moneybox · Engine Test Harness</h2>
@@ -141,17 +518,21 @@
     </div>
   </div>
 
-<div id="debug-banner">
-    Stage 1 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
-    <div id="debug-error" style="color:#ef4444;margin-top:4px;"></div>
-</div>
+  <!-- ─── Debug Banner ───────────────────────────────────────── -->
+  <div id="debug-banner">
+    Stage 3 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    <div id="debug-error"></div>
+  </div>
 
   <script>
     'use strict';
 
+    // ─── Constants ───────────────────────────────────────────────
     const APP_VERSION = '2.0';
 
     // ─── Storage Module ──────────────────────────────────────────
+    // All data reads and writes go through here.
+    // Swap internals to Firestore in V1.5 without touching anything else.
     const Storage = {
       get(key) {
         try {
@@ -175,116 +556,143 @@
     };
 
     // ─── Utilities ───────────────────────────────────────────────
+
+    // Parses a currency string, normalising comma decimals (e.g. "9,99" → 9.99).
+    // Always use this for currency fields. Never use parseFloat() directly.
     function parseNum(str) {
       if (typeof str !== 'string') str = String(str);
       return parseFloat(str.replace(',', '.').trim());
     }
 
-    // Returns YYYY-MM-DD string for a given Date object.
-    // Uses local time — toISOString() uses UTC which breaks in non-UTC timezones.
+    // Returns a YYYY-MM-DD string using LOCAL time.
+    // Never use toISOString() for date strings — it returns UTC,
+    // which gives the wrong date for UK users in BST (UTC+1).
     function toDateStr(date) {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
       const d = String(date.getDate()).padStart(2, '0');
       return `${y}-${m}-${d}`;
     }
-    
-    // Adds N days to a Date and returns a new Date
+
+    // Adds N days to a Date and returns a new Date.
     function addDays(date, n) {
       const d = new Date(date);
       d.setDate(d.getDate() + n);
       return d;
     }
 
+    // Formats a positive number as £X,XXX.XX
+    function formatGBP(n) {
+      return '£' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // Generates a short random ID string for bills.
+    function makeId() {
+      return Math.random().toString(36).slice(2, 10);
+    }
+
+    // Escapes HTML special characters to prevent injection in dynamic content.
+    function escHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
     // ─── Engine ──────────────────────────────────────────────────
     const Engine = {
 
       // Resolves a bill's actual date within a given month.
-      // If dayOfMonth doesn't exist in that month, pushes to 1st of next month.
+      // If dayOfMonth doesn't exist in that month (e.g. 31st June),
+      // pushes to 1st of the following month.
+      // Uses local Date constructor — never new Date(string) which parses as UTC.
       resolveBillDate(year, month, dayOfMonth) {
-  const candidate = new Date(year, month, dayOfMonth);
-  if (candidate.getMonth() !== month) {
-    // Date overflowed into next month — push to 1st of next month
-    return new Date(year, month + 1, 1);
-  }
-  return candidate;
-},
+        const candidate = new Date(year, month, dayOfMonth);
+        if (candidate.getMonth() !== month) {
+          // Overflowed — push to 1st of next month
+          return new Date(year, month + 1, 1);
+        }
+        return candidate;
+      },
 
-      // Returns all bills from the snapshot with their resolved dates for a given cycle.
-      // cycleStart: Date (payday)
-      // cycleEnd: Date (day before next payday, or end of known period)
-      // bills: array from billsSnapshot
+      // Returns all bills from the snapshot with resolved dates for a given cycle.
+      //
+      // FIX (Risk A from retro): All cycle-boundary comparisons use YYYY-MM-DD
+      // string comparison, not Date objects. This avoids UTC vs local time issues
+      // that cause off-by-one errors for UK users in BST.
+      //
+      // cycleStart: YYYY-MM-DD string
+      // cycleEnd:   YYYY-MM-DD string
+      // bills:      array from billsSnapshot (never the live bills list)
       getBillsForCycle(cycleStart, cycleEnd, bills) {
         const result = [];
-        const start = new Date(cycleStart);
-        const end = new Date(cycleEnd);
 
-        // Check each month that overlaps with the cycle
-        // We check the month of cycleStart and the following month to catch all bills
+        // Parse at noon local time to avoid DST midnight boundary issues
+        const startDate  = new Date(cycleStart + 'T12:00:00');
+        const endDate    = new Date(cycleEnd   + 'T12:00:00');
+
+        // Build list of all year/month pairs that overlap with the cycle
         const monthsToCheck = [];
-        let cursor = new Date(start.getFullYear(), start.getMonth(), 1);
-        const endMonth = new Date(end.getFullYear(), end.getMonth(), 1);
-        while (cursor <= endMonth) {
+        let cursor   = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        const endMon = new Date(endDate.getFullYear(),   endDate.getMonth(),   1);
+        while (cursor <= endMon) {
           monthsToCheck.push({ year: cursor.getFullYear(), month: cursor.getMonth() });
           cursor = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1);
         }
 
         bills.forEach(bill => {
           monthsToCheck.forEach(({ year, month }) => {
-            const resolved = Engine.resolveBillDate(year, month, bill.dayOfMonth);
-            if (resolved >= start && resolved <= end) {
-              result.push({ ...bill, resolvedDate: toDateStr(resolved) });
+            const resolved    = Engine.resolveBillDate(year, month, bill.dayOfMonth);
+            const resolvedStr = toDateStr(resolved);
+            // String comparison of YYYY-MM-DD is always correct — no timezone risk
+            if (resolvedStr >= cycleStart && resolvedStr <= cycleEnd) {
+              result.push({ ...bill, resolvedDate: resolvedStr });
             }
           });
         });
 
-        // Sort by resolved date
         result.sort((a, b) => a.resolvedDate.localeCompare(b.resolvedDate));
         return result;
       },
 
-      // Main calculation function.
-      // setup: { netPay, billsTransfer, targetBuffer }
-      // snapshot: array of bills (from billsSnapshot — NOT live bills)
-      // cycleStart: YYYY-MM-DD string (payday)
-      // cycleEnd: YYYY-MM-DD string (day before next payday)
-      // today: YYYY-MM-DD string
+      // Main calculation. All date comparisons are string-based for timezone safety.
+      // setup:       { netPay, billsTransfer, targetBuffer }
+      // snapshot:    bills array from billsSnapshot (NOT live bills)
+      // cycleStart:  YYYY-MM-DD string (payday)
+      // cycleEnd:    YYYY-MM-DD string (day before next payday)
+      // today:       YYYY-MM-DD string
       // liveBalance: number
       calculate(setup, snapshot, cycleStart, cycleEnd, today, liveBalance) {
         const { netPay, billsTransfer, targetBuffer } = setup;
         const startingBalance = netPay - billsTransfer;
 
-        const cycleStartDate = new Date(cycleStart);
-        const cycleEndDate = new Date(cycleEnd);
-        const todayDate = new Date(today);
+        const allBills = Engine.getBillsForCycle(cycleStart, cycleEnd, snapshot);
 
-        // Get all bills resolved within this cycle
-        const allBills = Engine.getBillsForCycle(cycleStartDate, cycleEndDate, snapshot);
+        // YYYY-MM-DD strings are directly comparable with < > ===
+        const passedBills    = allBills.filter(b => b.resolvedDate <= today);
+        const remainingBills = allBills.filter(b => b.resolvedDate  > today);
 
-        // Split into passed and remaining
-        const passedBills = allBills.filter(b => new Date(b.resolvedDate) <= todayDate);
-        const remainingBills = allBills.filter(b => new Date(b.resolvedDate) > todayDate);
-
-        const outgoingsToDate = passedBills.reduce((sum, b) => sum + b.amount, 0);
+        const outgoingsToDate    = passedBills.reduce((sum, b)    => sum + b.amount, 0);
         const remainingOutgoings = remainingBills.reduce((sum, b) => sum + b.amount, 0);
 
-        const expectedNow = startingBalance - outgoingsToDate;
+        const expectedNow  = startingBalance - outgoingsToDate;
         const projectedEnd = liveBalance - remainingOutgoings;
         const immediateGap = liveBalance - expectedNow;
-        const endGap = projectedEnd - targetBuffer;
+        const endGap       = projectedEnd - targetBuffer;
 
         let status;
-        if (endGap >= 20) status = 'ON_TRACK';
+        if (endGap >= 20)       status = 'ON_TRACK';
         else if (endGap >= -20) status = 'MARGINAL';
-        else status = 'OFF_TRACK';
+        else                    status = 'OFF_TRACK';
 
         return {
           status,
           startingBalance,
-          expectedNow: Math.round(expectedNow * 100) / 100,
-          immediateGap: Math.round(immediateGap * 100) / 100,
-          projectedEnd: Math.round(projectedEnd * 100) / 100,
-          endGap: Math.round(endGap * 100) / 100,
+          expectedNow:       Math.round(expectedNow       * 100) / 100,
+          immediateGap:      Math.round(immediateGap      * 100) / 100,
+          projectedEnd:      Math.round(projectedEnd      * 100) / 100,
+          endGap:            Math.round(endGap            * 100) / 100,
           remainingOutgoings: Math.round(remainingOutgoings * 100) / 100,
           passedBills,
           remainingBills
@@ -296,18 +704,15 @@
       getBurndownSeries(setup, snapshot, cycleStart, cycleEnd) {
         const { netPay, billsTransfer } = setup;
         const startingBalance = netPay - billsTransfer;
-
-        const cycleStartDate = new Date(cycleStart);
-        const cycleEndDate = new Date(cycleEnd);
-        const allBills = Engine.getBillsForCycle(cycleStartDate, cycleEndDate, snapshot);
+        const allBills = Engine.getBillsForCycle(cycleStart, cycleEnd, snapshot);
 
         const series = [];
         let balance = startingBalance;
-        let cursor = new Date(cycleStartDate);
+        let cursor  = new Date(cycleStart + 'T12:00:00');
+        const end   = new Date(cycleEnd   + 'T12:00:00');
 
-        while (cursor <= cycleEndDate) {
+        while (cursor <= end) {
           const dateStr = toDateStr(cursor);
-          // Deduct any bills falling on this day
           allBills
             .filter(b => b.resolvedDate === dateStr)
             .forEach(b => { balance -= b.amount; });
@@ -330,18 +735,324 @@
       return true;
     }
 
+    // ─── Setup Namespace ─────────────────────────────────────────
+    const Setup = {
+
+      // In-memory state — written to Storage only on final save (step 3)
+      data: {
+        netPay:        null,
+        billsTransfer: null,
+        targetBuffer:  null,
+        bills:         []
+      },
+
+      // Bill ID pending inline delete confirmation
+      pendingDeleteId: null,
+
+      showStep(n) {
+        document.querySelectorAll('.setup-step').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(`setup-step-${n}`);
+        if (target) target.classList.add('active');
+      },
+
+      // ── Step 1: Pay Details ───────────────────────────────────
+
+      submitPayDetails() {
+        const netPayVal = parseNum(document.getElementById('s1-net-pay').value);
+        const billsVal  = parseNum(document.getElementById('s1-bills-transfer').value);
+        const bufferVal = parseNum(document.getElementById('s1-buffer').value);
+
+        const v1 = Setup.validateAmount('s1-net-pay',        's1-err-net-pay',        netPayVal);
+        const v2 = Setup.validateAmount('s1-bills-transfer', 's1-err-bills-transfer', billsVal);
+        const v3 = Setup.validateAmount('s1-buffer',         's1-err-buffer',         bufferVal);
+
+        if (!v1 || !v2 || !v3) return;
+
+        Setup.data.netPay        = netPayVal;
+        Setup.data.billsTransfer = billsVal;
+        Setup.data.targetBuffer  = bufferVal;
+
+        Setup.showStep(2);
+        document.getElementById('s2-name').focus();
+      },
+
+      // Validates a currency field. Returns true if valid.
+      validateAmount(inputId, errorId, value) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+        const ok = !isNaN(value) && value > 0;
+        input.classList.toggle('error', !ok);
+        error.classList.toggle('visible', !ok);
+        return ok;
+      },
+
+      // ── Step 2: Bills Entry ───────────────────────────────────
+
+      addBill() {
+        const nameVal   = document.getElementById('s2-name').value.trim();
+        const amountVal = parseNum(document.getElementById('s2-amount').value);
+        const dayVal    = parseInt(document.getElementById('s2-day').value, 10);
+
+        // Validate name
+        const nameOk = nameVal.length > 0;
+        document.getElementById('s2-name').classList.toggle('error', !nameOk);
+        document.getElementById('s2-err-name').classList.toggle('visible', !nameOk);
+
+        const amountOk = Setup.validateAmount('s2-amount', 's2-err-amount', amountVal);
+
+        const dayOk = !isNaN(dayVal) && dayVal >= 1 && dayVal <= 31;
+        document.getElementById('s2-day').classList.toggle('error', !dayOk);
+        document.getElementById('s2-err-day').classList.toggle('visible', !dayOk);
+
+        if (!nameOk || !amountOk || !dayOk) return;
+
+        Setup.data.bills.push({
+          id:         makeId(),
+          name:       nameVal,
+          amount:     amountVal,
+          dayOfMonth: dayVal
+        });
+
+        // Reset form fields and refocus name
+        document.getElementById('s2-name').value   = '';
+        document.getElementById('s2-amount').value = '';
+        document.getElementById('s2-day').value    = '';
+        document.getElementById('s2-name').focus();
+
+        Setup.pendingDeleteId = null;
+        Setup.renderBillList();
+      },
+
+      renderBillList() {
+        const container = document.getElementById('bill-list');
+        const empty     = document.getElementById('bill-list-empty');
+
+        // Remove existing bill items (leave the empty-state element)
+        container.querySelectorAll('.bill-item').forEach(el => el.remove());
+
+        if (Setup.data.bills.length === 0) {
+          empty.style.display = 'block';
+          return;
+        }
+
+        empty.style.display = 'none';
+
+        Setup.data.bills.forEach(bill => {
+          const shortMonthNote = bill.dayOfMonth >= 29
+            ? `<div class="bill-item-short-month">⚠ Falls on 1st of the following month in short months</div>`
+            : '';
+
+          const isPending = Setup.pendingDeleteId === bill.id;
+
+          const confirmRow = isPending ? `
+            <div class="bill-confirm-row">
+              <span>Delete ${escHtml(bill.name)}?</span>
+              <button class="btn btn-secondary btn-sm" onclick="Setup.cancelDelete()">Cancel</button>
+              <button class="btn btn-danger btn-sm" onclick="Setup.confirmDelete('${bill.id}')">Delete</button>
+            </div>` : '';
+
+          const deleteBtn = !isPending
+            ? `<button class="btn-delete" onclick="Setup.requestDelete('${bill.id}')">Delete</button>`
+            : '';
+
+          const item = document.createElement('div');
+          item.className = 'bill-item';
+          item.id = `bill-${bill.id}`;
+          item.innerHTML = `
+            <div class="bill-item-row">
+              <div>
+                <div class="bill-item-name">${escHtml(bill.name)}</div>
+                <div class="bill-item-detail">${formatGBP(bill.amount)} · Day ${bill.dayOfMonth}</div>
+                ${shortMonthNote}
+              </div>
+              ${deleteBtn}
+            </div>
+            ${confirmRow}
+          `;
+
+          container.appendChild(item);
+        });
+      },
+
+      requestDelete(id) {
+        Setup.pendingDeleteId = id;
+        Setup.renderBillList();
+      },
+
+      cancelDelete() {
+        Setup.pendingDeleteId = null;
+        Setup.renderBillList();
+      },
+
+      confirmDelete(id) {
+        Setup.data.bills    = Setup.data.bills.filter(b => b.id !== id);
+        Setup.pendingDeleteId = null;
+        Setup.renderBillList();
+      },
+
+      // ── Step 3: Review ────────────────────────────────────────
+
+      showReview() {
+        const { netPay, billsTransfer, targetBuffer, bills } = Setup.data;
+        const startingBalance = netPay - billsTransfer;
+        const totalBills      = bills.reduce((sum, b) => sum + b.amount, 0);
+        const projectedEnd    = startingBalance - totalBills;
+        const endGap          = projectedEnd - targetBuffer;
+        const hasDeficit      = endGap < 0;
+
+        // Bills rows
+        let billsHtml = `<div class="review-section-label">Bills</div>`;
+        if (bills.length > 0) {
+          bills.forEach(b => {
+            billsHtml += `
+              <div class="review-row">
+                <span class="lbl">${escHtml(b.name)} (day ${b.dayOfMonth})</span>
+                <span class="val">−${formatGBP(b.amount)}</span>
+              </div>`;
+          });
+        } else {
+          billsHtml += `<div class="review-row"><span class="lbl" style="color:#555">No bills added</span></div>`;
+        }
+
+        // Deficit warning (only shown when endGap < 0)
+        const warningHtml = hasDeficit ? `
+          <div class="warning-panel">
+            <p>Your bills exceed your starting balance. You'll need to review your setup or accept a shortfall.</p>
+            <label class="warning-check">
+              <input type="checkbox" id="deficit-ack" onchange="Setup.toggleSaveButton()" />
+              I understand and want to save anyway
+            </label>
+          </div>` : '';
+
+        // Save button — amber and disabled when deficit, primary otherwise
+        const saveBtnHtml = hasDeficit
+          ? `<button class="btn btn-warning" id="btn-save" onclick="Setup.saveSetup()" disabled>Save anyway</button>`
+          : `<button class="btn btn-primary" id="btn-save" onclick="Setup.saveSetup()">Save setup →</button>`;
+
+        document.getElementById('review-content').innerHTML = `
+          <div class="review-section-label">Pay</div>
+          <div class="review-row">
+            <span class="lbl">Net pay</span>
+            <span class="val">${formatGBP(netPay)}</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Bills transfer</span>
+            <span class="val">−${formatGBP(billsTransfer)}</span>
+          </div>
+          <div class="review-row total">
+            <span class="lbl">Starting balance</span>
+            <span class="val">${formatGBP(startingBalance)}</span>
+          </div>
+
+          ${billsHtml}
+
+          <div class="review-section-label">Projection</div>
+          <div class="review-row">
+            <span class="lbl">Total monthly bills</span>
+            <span class="val">−${formatGBP(totalBills)}</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Target buffer</span>
+            <span class="val">−${formatGBP(targetBuffer)}</span>
+          </div>
+          <div class="review-row total ${endGap >= 0 ? 'positive' : 'negative'}">
+            <span class="lbl">Projected surplus / deficit</span>
+            <span class="val">${endGap >= 0 ? '+' : '−'}${formatGBP(Math.abs(endGap))}</span>
+          </div>
+
+          ${warningHtml}
+
+          <div class="setup-nav">
+            <button class="btn btn-back" onclick="Setup.showStep(2)">← Back</button>
+            ${saveBtnHtml}
+          </div>
+        `;
+
+        Setup.showStep(3);
+      },
+
+      toggleSaveButton() {
+        const ack = document.getElementById('deficit-ack');
+        const btn = document.getElementById('btn-save');
+        if (ack && btn) btn.disabled = !ack.checked;
+      },
+
+      saveSetup() {
+        Storage.set('burndown_setup', {
+          netPay:        Setup.data.netPay,
+          billsTransfer: Setup.data.billsTransfer,
+          targetBuffer:  Setup.data.targetBuffer,
+          bills:         Setup.data.bills,
+          savedAt:       new Date().toISOString()
+        });
+
+        // Default payday input to today
+        document.getElementById('s4-payday').value = toDateStr(new Date());
+        Setup.showStep(4);
+      },
+
+      // ── Step 4: First Payday ──────────────────────────────────
+
+      savePayday() {
+        const input     = document.getElementById('s4-payday');
+        const errorEl   = document.getElementById('s4-err-payday');
+        const dateValue = input.value; // YYYY-MM-DD string from date input
+
+        const thirtyOneDaysAgo = toDateStr(addDays(new Date(), -31));
+        const valid = dateValue
+          && /^\d{4}-\d{2}-\d{2}$/.test(dateValue)
+          && dateValue >= thirtyOneDaysAgo;
+
+        input.classList.toggle('error', !valid);
+        errorEl.classList.toggle('visible', !valid);
+        if (!valid) return;
+
+        Storage.set('burndown_paydays', [{
+          date:          dateValue,
+          billsSnapshot: null,
+          addedAt:       new Date().toISOString()
+        }]);
+
+        // Trigger snapshot immediately if payday is today or in the past
+        App.checkSnapshotTrigger();
+
+        App.showView('dashboard');
+      }
+    };
+
     // ─── App Controller ──────────────────────────────────────────
     const App = {
-      currentView: null,
 
       showView(name) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         const target = document.getElementById(`view-${name}`);
         if (target) {
           target.classList.add('active');
-          App.currentView = name;
           document.getElementById('debug-view').textContent = name;
         }
+      },
+
+      // On every load: if a payday has arrived and its billsSnapshot is null,
+      // take the snapshot now from the live bills list.
+      // This is the trigger point for the snapshot model.
+      checkSnapshotTrigger() {
+        const setup   = Storage.get('burndown_setup');
+        const paydays = Storage.get('burndown_paydays');
+        if (!setup || !paydays || paydays.length === 0) return;
+
+        const today   = toDateStr(new Date());
+        let   updated = false;
+
+        paydays.forEach(p => {
+          if (p.date <= today && p.billsSnapshot === null) {
+            // Deep copy — future edits to setup.bills must not affect this snapshot
+            p.billsSnapshot   = JSON.parse(JSON.stringify(setup.bills));
+            p.snapshotTakenAt = new Date().toISOString();
+            updated = true;
+          }
+        });
+
+        if (updated) Storage.set('burndown_paydays', paydays);
       },
 
       init() {
@@ -349,15 +1060,24 @@
         document.getElementById('debug-version').textContent =
           versionOk ? `${APP_VERSION} ✓` : `wiped → ${APP_VERSION}`;
 
-        // Run test harness if ?test param present
+        // Run test harness if ?test param is present
         if (window.location.search.includes('test')) {
           App.showView('test');
           TestHarness.run();
           return;
         }
 
+        // Check if a payday snapshot needs to be taken
+        App.checkSnapshotTrigger();
+
+        // Route to the correct view
         const setup = Storage.get('burndown_setup');
-        App.showView(setup ? 'dashboard' : 'setup');
+        if (setup) {
+          App.showView('dashboard');
+        } else {
+          Setup.showStep(1);
+          App.showView('setup');
+        }
       }
     };
 
@@ -388,10 +1108,10 @@
           groupDiv.appendChild(label);
 
           group.checks.forEach(c => {
-            const detail = document.createElement('div');
-            detail.className = 'test-detail';
-            detail.textContent = `  ${c.pass ? '✓' : '✗'} ${c.label}: got ${c.actual}, expected ${c.expected}${c.detail ? ' — ' + c.detail : ''}`;
-            groupDiv.appendChild(detail);
+            const d = document.createElement('div');
+            d.className = 'test-detail';
+            d.textContent = `  ${c.pass ? '✓' : '✗'} ${c.label}: got ${c.actual}, expected ${c.expected}${c.detail ? ' — ' + c.detail : ''}`;
+            groupDiv.appendChild(d);
           });
 
           container.appendChild(groupDiv);
@@ -407,12 +1127,7 @@
       run() {
         const results = [];
 
-        // Shared setup used by most scenarios
-        const setup = {
-          netPay: 2400,
-          billsTransfer: 600,
-          targetBuffer: 150
-        };
+        const setup = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
         // startingBalance = 2400 - 600 = 1800
 
         const snapshot = [
@@ -420,133 +1135,129 @@
           { id: '2', name: 'Phone',   amount: 40,  dayOfMonth: 10 },
           { id: '3', name: 'Netflix', amount: 18,  dayOfMonth: 20 }
         ];
-        // Total bills: 858
+        // Total bills: £858
 
-        // Cycle: 28 May → 24 June (28 days)
         const cycleStart = '2026-05-28';
         const cycleEnd   = '2026-06-24';
 
-        // ── Scenario 1: Mid-cycle, on track ──────────────────────
-        // Today: 15 June. Passed bills: Rent (1 Jun £800), Phone (10 Jun £40) = £840
-        // expectedNow = 1800 - 840 = 960
-        // Remaining: Netflix (20 Jun £18)
-        // projectedEnd = liveBalance(1000) - 18 = 982
-        // endGap = 982 - 150 = 832 → ON_TRACK
+        // ── S1: Mid-cycle, on track ───────────────────────────────
+        // Today: 15 Jun. Passed: Rent (1 Jun £800) + Phone (10 Jun £40) = £840
+        // expectedNow  = 1800 - 840 = 960
+        // Remaining:     Netflix (20 Jun £18)
+        // projectedEnd = 1000 - 18 = 982
+        // endGap       = 982 - 150 = 832 → ON_TRACK
+        // immediateGap = 1000 - 960 = +40
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 1000);
           const checks = [
-            TestHarness.assertEq('status', r.status, 'ON_TRACK'),
-            TestHarness.assert('expectedNow', r.expectedNow, 960),
-            TestHarness.assert('projectedEnd', r.projectedEnd, 982),
-            TestHarness.assert('endGap', r.endGap, 832),
-            TestHarness.assert('immediateGap', r.immediateGap, 40)
+            TestHarness.assertEq('status',       r.status,       'ON_TRACK'),
+            TestHarness.assert('expectedNow',    r.expectedNow,   960),
+            TestHarness.assert('projectedEnd',   r.projectedEnd,  982),
+            TestHarness.assert('endGap',         r.endGap,        832),
+            TestHarness.assert('immediateGap',   r.immediateGap,   40)
           ];
           results.push({ scenario: 'S1: Mid-cycle, on track', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 2: Mid-cycle, off track ─────────────────────
-        // Same date, lower balance (700)
-        // projectedEnd = 700 - 18 = 682
-        // endGap = 682 - 150 = 532 → still ON_TRACK (just less money)
-        // Let's use balance 200 instead:
-        // projectedEnd = 200 - 18 = 182
-        // endGap = 182 - 150 = 32 → ON_TRACK (marginal boundary)
-        // Use balance 100:
+        // ── S2: Mid-cycle, off track ──────────────────────────────
+        // Same date (15 Jun), balance = 100
         // projectedEnd = 100 - 18 = 82
-        // endGap = 82 - 150 = -68 → OFF_TRACK
+        // endGap       = 82 - 150 = -68 → OFF_TRACK
+        // immediateGap = 100 - 960 = -860
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 100);
           const checks = [
-            TestHarness.assertEq('status', r.status, 'OFF_TRACK'),
-            TestHarness.assert('projectedEnd', r.projectedEnd, 82),
-            TestHarness.assert('endGap', r.endGap, -68),
-            TestHarness.assert('immediateGap', r.immediateGap, -860)
+            TestHarness.assertEq('status',     r.status,       'OFF_TRACK'),
+            TestHarness.assert('projectedEnd', r.projectedEnd,   82),
+            TestHarness.assert('endGap',       r.endGap,        -68),
+            TestHarness.assert('immediateGap', r.immediateGap,  -860)
           ];
           results.push({ scenario: 'S2: Mid-cycle, off track', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 3: Mid-cycle, marginal ──────────────────────
-        // endGap needs to be between -20 and +20
-        // projectedEnd - 150 = 10 → projectedEnd = 160
-        // liveBalance - 18 = 160 → liveBalance = 178
+        // ── S3: Mid-cycle, marginal ───────────────────────────────
+        // endGap must be between -20 and +20
+        // Target: endGap = +10 → projectedEnd = 160 → liveBalance = 160 + 18 = 178
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 178);
           const checks = [
             TestHarness.assertEq('status', r.status, 'MARGINAL'),
-            TestHarness.assert('endGap', r.endGap, 10)
+            TestHarness.assert('endGap',   r.endGap,  10)
           ];
           results.push({ scenario: 'S3: Mid-cycle, marginal', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 4: Bill falls today ─────────────────────────
-        // Today is 10 June (Phone bill day). Phone should count as PASSED.
-        // passedBills: Rent (1 Jun) + Phone (10 Jun) = 840
+        // ── S4: Bill falls today counts as passed ─────────────────
+        // Today: 10 Jun (Phone bill day)
+        // passedBills: Rent (1 Jun) + Phone (10 Jun) = 2 bills, £840
         // expectedNow = 1800 - 840 = 960
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-10', 1000);
           const checks = [
             TestHarness.assert('passedBills count', r.passedBills.length, 2, 'Rent + Phone both passed'),
-            TestHarness.assert('expectedNow', r.expectedNow, 960)
+            TestHarness.assert('expectedNow',       r.expectedNow,        960)
           ];
           results.push({ scenario: 'S4: Bill falls today counts as passed', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 5: Late-month bill (31st) ───────────────────
-        // Bill on 31st in June → resolves to 1st July
-        // Cycle: 28 May → 31 July to capture it
+        // ── S5: Late-month bill resolves to 1st of next month ─────
+        // Bill on day 31, in June (only 30 days) → resolves to 1st July
+        // Cycle: 28 May → 24 July (captures 1st July, excludes 31st July)
+        // Today: 15 Jun → bill is still in remaining
+        // Expected: remainingBills.length = 1, resolvedDate = '2026-07-01'
         {
           const lateSetup = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
-          const lateSnap = [{ id: '9', name: 'LateOne', amount: 50, dayOfMonth: 31 }];
+          const lateSnap  = [{ id: '9', name: 'LateOne', amount: 50, dayOfMonth: 31 }];
           const r = Engine.calculate(lateSetup, lateSnap, '2026-05-28', '2026-07-24', '2026-06-15', 1000);
-          // 31 June doesn't exist → resolves to 1 July
-          // Today is 15 June → bill hasn't passed yet
           const checks = [
-            TestHarness.assert('remainingBills count', r.remainingBills.length, 1, '31st June → 1st July, not yet passed'),
+            TestHarness.assert('remainingBills count', r.remainingBills.length, 1,
+              '31st June → 1st July, not yet passed on 15th June'),
             TestHarness.assertEq('resolved date', r.remainingBills[0]?.resolvedDate, '2026-07-01')
           ];
           results.push({ scenario: 'S5: Late-month bill resolves to 1st of next month', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 6: First day of cycle ───────────────────────
-        // Today is payday (28 May). No bills have passed yet.
-        // expectedNow = 1800 - 0 = 1800
-        // Rent falls 1 June — not yet passed
+        // ── S6: First day of cycle ────────────────────────────────
+        // Today: 28 May (payday). No bills passed yet.
+        // expectedNow  = 1800 - 0 = 1800
+        // immediateGap = 1800 - 1800 = 0
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-05-28', 1800);
           const checks = [
             TestHarness.assert('passedBills count', r.passedBills.length, 0, 'No bills passed on payday'),
-            TestHarness.assert('expectedNow', r.expectedNow, 1800),
-            TestHarness.assert('immediateGap', r.immediateGap, 0)
+            TestHarness.assert('expectedNow',       r.expectedNow,        1800),
+            TestHarness.assert('immediateGap',      r.immediateGap,       0)
           ];
           results.push({ scenario: 'S6: First day of cycle', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 7: Last day of cycle ────────────────────────
-        // Today is 24 June. All bills passed: Rent + Phone + Netflix = 858
-        // expectedNow = 1800 - 858 = 942
+        // ── S7: Last day of cycle ─────────────────────────────────
+        // Today: 24 Jun. All bills passed: Rent + Phone + Netflix = £858
+        // expectedNow  = 1800 - 858 = 942
         // remainingBills = 0
-        // projectedEnd = liveBalance - 0 = liveBalance
+        // projectedEnd = liveBalance(950) - 0 = 950
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-24', 950);
           const checks = [
-            TestHarness.assert('passedBills count', r.passedBills.length, 3, 'All bills passed'),
+            TestHarness.assert('passedBills count',    r.passedBills.length,   3, 'All bills passed'),
             TestHarness.assert('remainingBills count', r.remainingBills.length, 0),
-            TestHarness.assert('projectedEnd', r.projectedEnd, 950),
-            TestHarness.assert('expectedNow', r.expectedNow, 942)
+            TestHarness.assert('projectedEnd',         r.projectedEnd,          950),
+            TestHarness.assert('expectedNow',          r.expectedNow,           942)
           ];
           results.push({ scenario: 'S7: Last day of cycle', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── Scenario 8: Snapshot vs live bills differ ─────────────
-        // Live bills (burndown_setup.bills) have an extra bill.
-        // Engine must use snapshot only — extra bill should NOT appear.
+        // ── S8: Engine uses snapshot, not live bills ──────────────
+        // Snapshot has only Rent. Phone is in live bills but must NOT appear in results.
+        // Total bills in cycle from snapshot: 1
         {
           const snapOnly = [{ id: '1', name: 'Rent', amount: 800, dayOfMonth: 1 }];
-          // liveBills would have Rent + Phone, but we never pass liveBills to Engine
           const r = Engine.calculate(setup, snapOnly, cycleStart, cycleEnd, '2026-06-15', 1000);
           const checks = [
-            TestHarness.assert('only snapshot bills used', r.passedBills.length + r.remainingBills.length, 1,
-              'Phone not in snapshot so should not appear')
+            TestHarness.assert(
+              'total bills in cycle', r.passedBills.length + r.remainingBills.length, 1,
+              'Phone not in snapshot — must not appear'
+            )
           ];
           results.push({ scenario: 'S8: Engine uses snapshot, not live bills', pass: checks.every(c => c.pass), checks });
         }
@@ -555,13 +1266,23 @@
       }
     };
 
-    // ─── Single entry point ──────────────────────────────────────
+    // ─── Entry Point ─────────────────────────────────────────────
+
+    // Report JS parse/runtime errors on-screen (no DevTools needed on mobile)
     window.addEventListener('error', e => {
       const el = document.getElementById('debug-error');
-      if (el) el.textContent = `JS Error: ${e.message} (${e.filename}:${e.lineno})`;
+      if (el) el.textContent = `JS Error: ${e.message} (line ${e.lineno})`;
     });
 
-    document.addEventListener('DOMContentLoaded', App.init);
+    // Single DOMContentLoaded listener — all init happens through App.init()
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        App.init();
+      } catch (e) {
+        const el = document.getElementById('debug-error');
+        if (el) el.textContent = `Init error: ${e.message}`;
+      }
+    });
 
     // ─── Service Worker Registration ─────────────────────────────
     if ('serviceWorker' in navigator) {
