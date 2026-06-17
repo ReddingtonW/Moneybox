@@ -15,10 +15,10 @@
       background: #0f1117;
       color: #f0f0f0;
       min-height: 100vh;
-      padding: 1rem 1rem 4rem;
+      padding: 0 1rem 5rem;
     }
 
-    /* ─── Views ────────────────────────────────────────────────── */
+    /* ─── Views ─────────────────────────────────────────────────── */
     .view { display: none; width: 100%; max-width: 480px; margin: 0 auto; }
     .view.active { display: block; }
 
@@ -27,7 +27,6 @@
     .setup-step.active { display: block; }
 
     /* ─── Setup View — all CSS scoped to #view-setup ────────────── */
-
     #view-setup .setup-card {
       background: #1a1d27;
       border: 1px solid #2a2d3a;
@@ -56,9 +55,7 @@
       border-radius: 2px;
     }
 
-    #view-setup .setup-header {
-      margin-bottom: 1.5rem;
-    }
+    #view-setup .setup-header { margin-bottom: 1.5rem; }
 
     #view-setup .setup-header h1 {
       font-size: 1.25rem;
@@ -72,10 +69,7 @@
       color: #888;
     }
 
-    /* Form fields */
-    #view-setup .field {
-      margin-bottom: 1.25rem;
-    }
+    #view-setup .field { margin-bottom: 1.25rem; }
 
     #view-setup .field label {
       display: block;
@@ -98,13 +92,8 @@
       -webkit-appearance: none;
     }
 
-    #view-setup .field input:focus {
-      border-color: #3b82f6;
-    }
-
-    #view-setup .field input.error {
-      border-color: #ef4444;
-    }
+    #view-setup .field input:focus { border-color: #3b82f6; }
+    #view-setup .field input.error { border-color: #ef4444; }
 
     #view-setup .field .field-hint {
       font-size: 0.8rem;
@@ -119,11 +108,8 @@
       margin-top: 0.35rem;
     }
 
-    #view-setup .field .field-error.visible {
-      display: block;
-    }
+    #view-setup .field .field-error.visible { display: block; }
 
-    /* Bill list */
     #view-setup .bill-list {
       margin-top: 1.25rem;
       border-top: 1px solid #2a2d3a;
@@ -197,7 +183,6 @@
       flex: 1;
     }
 
-    /* Review screen */
     #view-setup .review-section-label {
       font-size: 0.7rem;
       color: #555;
@@ -229,7 +214,6 @@
     #view-setup .review-row.positive .val { color: #22c55e; }
     #view-setup .review-row.negative .val { color: #ef4444; }
 
-    /* Warning panel */
     #view-setup .warning-panel {
       background: #451a03;
       border: 1px solid #92400e;
@@ -258,42 +242,174 @@
       width: 18px;
       height: 18px;
       flex-shrink: 0;
-      cursor: pointer;
     }
 
-    /* Nav row */
     #view-setup .setup-nav {
       display: flex;
       gap: 0.75rem;
       margin-top: 1.5rem;
     }
 
-    /* ─── Dashboard View — scoped to #view-dashboard ────────────── */
-    #view-dashboard .card {
+    /* ─── Dashboard View — all CSS scoped to #view-dashboard ─────── */
+    #view-dashboard { padding-top: 1rem; }
+
+    #view-dashboard .db-app-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.75rem 0 0.5rem;
+    }
+
+    #view-dashboard .db-app-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.03em;
+    }
+
+    #view-dashboard .db-day-count {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    #view-dashboard .db-cycle-dates {
+      font-size: 0.75rem;
+      color: #444;
+      margin-bottom: 0.75rem;
+    }
+
+    #view-dashboard .db-card {
       background: #1a1d27;
       border: 1px solid #2a2d3a;
       border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      margin-top: 1.5rem;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
     }
 
-    #view-dashboard h1 {
-      font-size: 1.5rem;
+    #view-dashboard .db-section-label {
+      font-size: 0.7rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Status badge */
+    #view-dashboard .db-badge {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
       font-weight: 700;
-      color: #ffffff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.85rem;
+    }
+
+    #view-dashboard .db-badge.on-track  { background: #14532d; color: #22c55e; }
+    #view-dashboard .db-badge.marginal  { background: #3f2a00; color: #f59e0b; }
+    #view-dashboard .db-badge.off-track { background: #450a0a; color: #ef4444; }
+
+    /* Status rows */
+    #view-dashboard .db-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid #1f2335;
+      font-size: 0.875rem;
+    }
+
+    #view-dashboard .db-stat-row:last-child { border-bottom: none; }
+    #view-dashboard .db-stat-row .lbl { color: #888; }
+    #view-dashboard .db-stat-row .val { font-weight: 600; }
+    #view-dashboard .db-stat-row .val.pos  { color: #22c55e; }
+    #view-dashboard .db-stat-row .val.neg  { color: #ef4444; }
+    #view-dashboard .db-stat-row .val.warn { color: #f59e0b; }
+
+    /* Check-in input */
+    #view-dashboard .db-ci-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #ccc;
       margin-bottom: 0.5rem;
     }
 
-    #view-dashboard p {
-      color: #888;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+    #view-dashboard .db-ci-input {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1.25rem;
+      color: #f0f0f0;
+      min-height: 50px;
+      outline: none;
+      margin-bottom: 0.75rem;
+      -webkit-appearance: none;
     }
+
+    #view-dashboard .db-ci-input:focus { border-color: #3b82f6; }
+    #view-dashboard .db-ci-input.error { border-color: #ef4444; }
+
+    #view-dashboard .db-ci-error {
+      display: none;
+      font-size: 0.8rem;
+      color: #ef4444;
+      margin-bottom: 0.6rem;
+    }
+
+    #view-dashboard .db-ci-error.visible { display: block; }
+
+    /* Locked state */
+    #view-dashboard .db-locked-msg {
+      font-size: 0.8rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+      line-height: 1.5;
+    }
+
+    /* Bill rows */
+    #view-dashboard .db-bill-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #1f2335;
+      font-size: 0.875rem;
+    }
+
+    #view-dashboard .db-bill-row:last-child { border-bottom: none; }
+    #view-dashboard .db-bill-name { color: #ccc; }
+    #view-dashboard .db-bill-right { text-align: right; }
+    #view-dashboard .db-bill-amount { font-weight: 600; display: block; }
+    #view-dashboard .db-bill-date { font-size: 0.75rem; color: #555; }
+
+    /* Pre-cycle holding state */
+    #view-dashboard .db-holding {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    #view-dashboard .db-holding h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f0f0f0;
+      margin-bottom: 0.5rem;
+    }
+
+    #view-dashboard .db-holding p {
+      font-size: 0.875rem;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    /* Canvas chart */
+    #view-dashboard canvas { display: block; width: 100%; }
 
     /* ─── Test View ─────────────────────────────────────────────── */
     #view-test { padding-top: 1rem; }
-
     #test-output { width: 100%; font-family: monospace; font-size: 0.8rem; }
     #test-output h2 { color: #888; margin-bottom: 1rem; font-size: 1rem; }
 
@@ -337,7 +453,6 @@
       cursor: pointer;
       min-height: 44px;
       width: 100%;
-      transition: opacity 0.15s;
     }
 
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -470,7 +585,6 @@
           <h1>Review</h1>
           <p>Check everything before saving.</p>
         </div>
-        <!-- Populated entirely by Setup.showReview() including nav buttons -->
         <div id="review-content"></div>
       </div>
     </div>
@@ -501,13 +615,7 @@
 
   <!-- ─── Dashboard View ─────────────────────────────────────── -->
   <div id="view-dashboard" class="view">
-    <div class="card">
-      <h1>Dashboard</h1>
-      <p>Your burndown will appear here in Stage 4.</p>
-      <button class="btn btn-secondary" onclick="App.showView('setup')" style="margin-top:0.5rem">
-        ← Back to Setup
-      </button>
-    </div>
+    <div id="dashboard-content"></div>
   </div>
 
   <!-- ─── Test View ───────────────────────────────────────────── -->
@@ -520,7 +628,7 @@
 
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 3 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 4 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -531,8 +639,6 @@
     const APP_VERSION = '2.0';
 
     // ─── Storage Module ──────────────────────────────────────────
-    // All data reads and writes go through here.
-    // Swap internals to Firestore in V1.5 without touching anything else.
     const Storage = {
       get(key) {
         try {
@@ -557,16 +663,15 @@
 
     // ─── Utilities ───────────────────────────────────────────────
 
-    // Parses a currency string, normalising comma decimals (e.g. "9,99" → 9.99).
-    // Always use this for currency fields. Never use parseFloat() directly.
+    // Parses a currency string, normalising comma decimals.
+    // Always use this for currency fields — never parseFloat() directly.
     function parseNum(str) {
       if (typeof str !== 'string') str = String(str);
       return parseFloat(str.replace(',', '.').trim());
     }
 
     // Returns a YYYY-MM-DD string using LOCAL time.
-    // Never use toISOString() for date strings — it returns UTC,
-    // which gives the wrong date for UK users in BST (UTC+1).
+    // Never use toISOString() — it returns UTC, wrong for UK users in BST.
     function toDateStr(date) {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -581,17 +686,23 @@
       return d;
     }
 
-    // Formats a positive number as £X,XXX.XX
+    // Formats a number as £X,XXX.XX
     function formatGBP(n) {
       return '£' + Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
-    // Generates a short random ID string for bills.
+    // Formats a date string (YYYY-MM-DD) as "28 May"
+    function formatShortDate(dateStr) {
+      const d = new Date(dateStr + 'T12:00:00');
+      return d.getDate() + ' ' + d.toLocaleString('default', { month: 'short' });
+    }
+
+    // Generates a short random ID.
     function makeId() {
       return Math.random().toString(36).slice(2, 10);
     }
 
-    // Escapes HTML special characters to prevent injection in dynamic content.
+    // Escapes HTML to prevent injection in dynamic content.
     function escHtml(str) {
       return String(str)
         .replace(/&/g, '&amp;')
@@ -604,35 +715,23 @@
     const Engine = {
 
       // Resolves a bill's actual date within a given month.
-      // If dayOfMonth doesn't exist in that month (e.g. 31st June),
-      // pushes to 1st of the following month.
-      // Uses local Date constructor — never new Date(string) which parses as UTC.
+      // If dayOfMonth doesn't exist (e.g. 31st June), pushes to 1st of next month.
       resolveBillDate(year, month, dayOfMonth) {
         const candidate = new Date(year, month, dayOfMonth);
         if (candidate.getMonth() !== month) {
-          // Overflowed — push to 1st of next month
           return new Date(year, month + 1, 1);
         }
         return candidate;
       },
 
-      // Returns all bills from the snapshot with resolved dates for a given cycle.
-      //
-      // FIX (Risk A from retro): All cycle-boundary comparisons use YYYY-MM-DD
-      // string comparison, not Date objects. This avoids UTC vs local time issues
-      // that cause off-by-one errors for UK users in BST.
-      //
-      // cycleStart: YYYY-MM-DD string
-      // cycleEnd:   YYYY-MM-DD string
-      // bills:      array from billsSnapshot (never the live bills list)
+      // Returns all bills from snapshot with resolved dates for a given cycle.
+      // All comparisons are YYYY-MM-DD string comparisons — timezone-safe.
       getBillsForCycle(cycleStart, cycleEnd, bills) {
         const result = [];
 
-        // Parse at noon local time to avoid DST midnight boundary issues
-        const startDate  = new Date(cycleStart + 'T12:00:00');
-        const endDate    = new Date(cycleEnd   + 'T12:00:00');
+        const startDate = new Date(cycleStart + 'T12:00:00');
+        const endDate   = new Date(cycleEnd   + 'T12:00:00');
 
-        // Build list of all year/month pairs that overlap with the cycle
         const monthsToCheck = [];
         let cursor   = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
         const endMon = new Date(endDate.getFullYear(),   endDate.getMonth(),   1);
@@ -645,7 +744,6 @@
           monthsToCheck.forEach(({ year, month }) => {
             const resolved    = Engine.resolveBillDate(year, month, bill.dayOfMonth);
             const resolvedStr = toDateStr(resolved);
-            // String comparison of YYYY-MM-DD is always correct — no timezone risk
             if (resolvedStr >= cycleStart && resolvedStr <= cycleEnd) {
               result.push({ ...bill, resolvedDate: resolvedStr });
             }
@@ -656,20 +754,12 @@
         return result;
       },
 
-      // Main calculation. All date comparisons are string-based for timezone safety.
-      // setup:       { netPay, billsTransfer, targetBuffer }
-      // snapshot:    bills array from billsSnapshot (NOT live bills)
-      // cycleStart:  YYYY-MM-DD string (payday)
-      // cycleEnd:    YYYY-MM-DD string (day before next payday)
-      // today:       YYYY-MM-DD string
-      // liveBalance: number
+      // Main calculation. String-based date comparisons throughout.
       calculate(setup, snapshot, cycleStart, cycleEnd, today, liveBalance) {
         const { netPay, billsTransfer, targetBuffer } = setup;
         const startingBalance = netPay - billsTransfer;
 
-        const allBills = Engine.getBillsForCycle(cycleStart, cycleEnd, snapshot);
-
-        // YYYY-MM-DD strings are directly comparable with < > ===
+        const allBills       = Engine.getBillsForCycle(cycleStart, cycleEnd, snapshot);
         const passedBills    = allBills.filter(b => b.resolvedDate <= today);
         const remainingBills = allBills.filter(b => b.resolvedDate  > today);
 
@@ -687,23 +777,19 @@
         else                    status = 'OFF_TRACK';
 
         return {
-          status,
-          startingBalance,
+          status, startingBalance,
           expectedNow:       Math.round(expectedNow       * 100) / 100,
           immediateGap:      Math.round(immediateGap      * 100) / 100,
           projectedEnd:      Math.round(projectedEnd      * 100) / 100,
           endGap:            Math.round(endGap            * 100) / 100,
           remainingOutgoings: Math.round(remainingOutgoings * 100) / 100,
-          passedBills,
-          remainingBills
+          passedBills, remainingBills
         };
       },
 
-      // Generates the expected daily balance series for the burndown chart.
-      // Returns array of { date: YYYY-MM-DD, balance: number }
+      // Returns daily expected balance series for the chart.
       getBurndownSeries(setup, snapshot, cycleStart, cycleEnd) {
-        const { netPay, billsTransfer } = setup;
-        const startingBalance = netPay - billsTransfer;
+        const startingBalance = setup.netPay - setup.billsTransfer;
         const allBills = Engine.getBillsForCycle(cycleStart, cycleEnd, snapshot);
 
         const series = [];
@@ -738,24 +824,19 @@
     // ─── Setup Namespace ─────────────────────────────────────────
     const Setup = {
 
-      // In-memory state — written to Storage only on final save (step 3)
       data: {
-        netPay:        null,
-        billsTransfer: null,
-        targetBuffer:  null,
-        bills:         []
+        netPay: null, billsTransfer: null, targetBuffer: null, bills: []
       },
 
-      // Bill ID pending inline delete confirmation
       pendingDeleteId: null,
 
       showStep(n) {
         document.querySelectorAll('.setup-step').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(`setup-step-${n}`);
-        if (target) target.classList.add('active');
+        const t = document.getElementById(`setup-step-${n}`);
+        if (t) t.classList.add('active');
       },
 
-      // ── Step 1: Pay Details ───────────────────────────────────
+      // ── Step 1 ────────────────────────────────────────────────
 
       submitPayDetails() {
         const netPayVal = parseNum(document.getElementById('s1-net-pay').value);
@@ -765,7 +846,6 @@
         const v1 = Setup.validateAmount('s1-net-pay',        's1-err-net-pay',        netPayVal);
         const v2 = Setup.validateAmount('s1-bills-transfer', 's1-err-bills-transfer', billsVal);
         const v3 = Setup.validateAmount('s1-buffer',         's1-err-buffer',         bufferVal);
-
         if (!v1 || !v2 || !v3) return;
 
         Setup.data.netPay        = netPayVal;
@@ -776,44 +856,33 @@
         document.getElementById('s2-name').focus();
       },
 
-      // Validates a currency field. Returns true if valid.
       validateAmount(inputId, errorId, value) {
-        const input = document.getElementById(inputId);
-        const error = document.getElementById(errorId);
         const ok = !isNaN(value) && value > 0;
-        input.classList.toggle('error', !ok);
-        error.classList.toggle('visible', !ok);
+        document.getElementById(inputId).classList.toggle('error', !ok);
+        document.getElementById(errorId).classList.toggle('visible', !ok);
         return ok;
       },
 
-      // ── Step 2: Bills Entry ───────────────────────────────────
+      // ── Step 2 ────────────────────────────────────────────────
 
       addBill() {
         const nameVal   = document.getElementById('s2-name').value.trim();
         const amountVal = parseNum(document.getElementById('s2-amount').value);
         const dayVal    = parseInt(document.getElementById('s2-day').value, 10);
 
-        // Validate name
-        const nameOk = nameVal.length > 0;
+        const nameOk   = nameVal.length > 0;
+        const amountOk = Setup.validateAmount('s2-amount', 's2-err-amount', amountVal);
+        const dayOk    = !isNaN(dayVal) && dayVal >= 1 && dayVal <= 31;
+
         document.getElementById('s2-name').classList.toggle('error', !nameOk);
         document.getElementById('s2-err-name').classList.toggle('visible', !nameOk);
-
-        const amountOk = Setup.validateAmount('s2-amount', 's2-err-amount', amountVal);
-
-        const dayOk = !isNaN(dayVal) && dayVal >= 1 && dayVal <= 31;
         document.getElementById('s2-day').classList.toggle('error', !dayOk);
         document.getElementById('s2-err-day').classList.toggle('visible', !dayOk);
 
         if (!nameOk || !amountOk || !dayOk) return;
 
-        Setup.data.bills.push({
-          id:         makeId(),
-          name:       nameVal,
-          amount:     amountVal,
-          dayOfMonth: dayVal
-        });
+        Setup.data.bills.push({ id: makeId(), name: nameVal, amount: amountVal, dayOfMonth: dayVal });
 
-        // Reset form fields and refocus name
         document.getElementById('s2-name').value   = '';
         document.getElementById('s2-amount').value = '';
         document.getElementById('s2-day').value    = '';
@@ -827,7 +896,6 @@
         const container = document.getElementById('bill-list');
         const empty     = document.getElementById('bill-list-empty');
 
-        // Remove existing bill items (leave the empty-state element)
         container.querySelectorAll('.bill-item').forEach(el => el.remove());
 
         if (Setup.data.bills.length === 0) {
@@ -838,12 +906,13 @@
         empty.style.display = 'none';
 
         Setup.data.bills.forEach(bill => {
-          const shortMonthNote = bill.dayOfMonth >= 29
+          const shortNote  = bill.dayOfMonth >= 29
             ? `<div class="bill-item-short-month">⚠ Falls on 1st of the following month in short months</div>`
             : '';
-
-          const isPending = Setup.pendingDeleteId === bill.id;
-
+          const isPending  = Setup.pendingDeleteId === bill.id;
+          const deleteBtn  = !isPending
+            ? `<button class="btn-delete" onclick="Setup.requestDelete('${bill.id}')">Delete</button>`
+            : '';
           const confirmRow = isPending ? `
             <div class="bill-confirm-row">
               <span>Delete ${escHtml(bill.name)}?</span>
@@ -851,46 +920,33 @@
               <button class="btn btn-danger btn-sm" onclick="Setup.confirmDelete('${bill.id}')">Delete</button>
             </div>` : '';
 
-          const deleteBtn = !isPending
-            ? `<button class="btn-delete" onclick="Setup.requestDelete('${bill.id}')">Delete</button>`
-            : '';
-
           const item = document.createElement('div');
           item.className = 'bill-item';
-          item.id = `bill-${bill.id}`;
+          item.id        = `bill-${bill.id}`;
           item.innerHTML = `
             <div class="bill-item-row">
               <div>
                 <div class="bill-item-name">${escHtml(bill.name)}</div>
                 <div class="bill-item-detail">${formatGBP(bill.amount)} · Day ${bill.dayOfMonth}</div>
-                ${shortMonthNote}
+                ${shortNote}
               </div>
               ${deleteBtn}
             </div>
-            ${confirmRow}
-          `;
-
+            ${confirmRow}`;
           container.appendChild(item);
         });
       },
 
-      requestDelete(id) {
-        Setup.pendingDeleteId = id;
-        Setup.renderBillList();
-      },
-
-      cancelDelete() {
-        Setup.pendingDeleteId = null;
-        Setup.renderBillList();
-      },
+      requestDelete(id) { Setup.pendingDeleteId = id; Setup.renderBillList(); },
+      cancelDelete()     { Setup.pendingDeleteId = null; Setup.renderBillList(); },
 
       confirmDelete(id) {
-        Setup.data.bills    = Setup.data.bills.filter(b => b.id !== id);
+        Setup.data.bills      = Setup.data.bills.filter(b => b.id !== id);
         Setup.pendingDeleteId = null;
         Setup.renderBillList();
       },
 
-      // ── Step 3: Review ────────────────────────────────────────
+      // ── Step 3 ────────────────────────────────────────────────
 
       showReview() {
         const { netPay, billsTransfer, targetBuffer, bills } = Setup.data;
@@ -900,7 +956,6 @@
         const endGap          = projectedEnd - targetBuffer;
         const hasDeficit      = endGap < 0;
 
-        // Bills rows
         let billsHtml = `<div class="review-section-label">Bills</div>`;
         if (bills.length > 0) {
           bills.forEach(b => {
@@ -914,7 +969,6 @@
           billsHtml += `<div class="review-row"><span class="lbl" style="color:#555">No bills added</span></div>`;
         }
 
-        // Deficit warning (only shown when endGap < 0)
         const warningHtml = hasDeficit ? `
           <div class="warning-panel">
             <p>Your bills exceed your starting balance. You'll need to review your setup or accept a shortfall.</p>
@@ -924,49 +978,38 @@
             </label>
           </div>` : '';
 
-        // Save button — amber and disabled when deficit, primary otherwise
         const saveBtnHtml = hasDeficit
           ? `<button class="btn btn-warning" id="btn-save" onclick="Setup.saveSetup()" disabled>Save anyway</button>`
-          : `<button class="btn btn-primary" id="btn-save" onclick="Setup.saveSetup()">Save setup →</button>`;
+          : `<button class="btn btn-primary"  id="btn-save" onclick="Setup.saveSetup()">Save setup →</button>`;
 
         document.getElementById('review-content').innerHTML = `
           <div class="review-section-label">Pay</div>
           <div class="review-row">
-            <span class="lbl">Net pay</span>
-            <span class="val">${formatGBP(netPay)}</span>
+            <span class="lbl">Net pay</span><span class="val">${formatGBP(netPay)}</span>
           </div>
           <div class="review-row">
-            <span class="lbl">Bills transfer</span>
-            <span class="val">−${formatGBP(billsTransfer)}</span>
+            <span class="lbl">Bills transfer</span><span class="val">−${formatGBP(billsTransfer)}</span>
           </div>
           <div class="review-row total">
-            <span class="lbl">Starting balance</span>
-            <span class="val">${formatGBP(startingBalance)}</span>
+            <span class="lbl">Starting balance</span><span class="val">${formatGBP(startingBalance)}</span>
           </div>
-
           ${billsHtml}
-
           <div class="review-section-label">Projection</div>
           <div class="review-row">
-            <span class="lbl">Total monthly bills</span>
-            <span class="val">−${formatGBP(totalBills)}</span>
+            <span class="lbl">Total monthly bills</span><span class="val">−${formatGBP(totalBills)}</span>
           </div>
           <div class="review-row">
-            <span class="lbl">Target buffer</span>
-            <span class="val">−${formatGBP(targetBuffer)}</span>
+            <span class="lbl">Target buffer</span><span class="val">−${formatGBP(targetBuffer)}</span>
           </div>
           <div class="review-row total ${endGap >= 0 ? 'positive' : 'negative'}">
             <span class="lbl">Projected surplus / deficit</span>
             <span class="val">${endGap >= 0 ? '+' : '−'}${formatGBP(Math.abs(endGap))}</span>
           </div>
-
           ${warningHtml}
-
           <div class="setup-nav">
             <button class="btn btn-back" onclick="Setup.showStep(2)">← Back</button>
             ${saveBtnHtml}
-          </div>
-        `;
+          </div>`;
 
         Setup.showStep(3);
       },
@@ -985,18 +1028,16 @@
           bills:         Setup.data.bills,
           savedAt:       new Date().toISOString()
         });
-
-        // Default payday input to today
         document.getElementById('s4-payday').value = toDateStr(new Date());
         Setup.showStep(4);
       },
 
-      // ── Step 4: First Payday ──────────────────────────────────
+      // ── Step 4 ────────────────────────────────────────────────
 
       savePayday() {
         const input     = document.getElementById('s4-payday');
         const errorEl   = document.getElementById('s4-err-payday');
-        const dateValue = input.value; // YYYY-MM-DD string from date input
+        const dateValue = input.value;
 
         const thirtyOneDaysAgo = toDateStr(addDays(new Date(), -31));
         const valid = dateValue
@@ -1008,15 +1049,402 @@
         if (!valid) return;
 
         Storage.set('burndown_paydays', [{
-          date:          dateValue,
-          billsSnapshot: null,
-          addedAt:       new Date().toISOString()
+          date: dateValue, billsSnapshot: null, addedAt: new Date().toISOString()
         }]);
 
-        // Trigger snapshot immediately if payday is today or in the past
         App.checkSnapshotTrigger();
-
         App.showView('dashboard');
+        Dashboard.render();
+      }
+    };
+
+    // ─── Dashboard Namespace ─────────────────────────────────────
+    const Dashboard = {
+
+      // True if the user just checked in during this session.
+      // Used to show result at full opacity on the same visit.
+      justCheckedIn: false,
+
+      // Determines the current cycle state from stored paydays.
+      getCycleState(paydays, today) {
+        if (!paydays || paydays.length === 0) return { state: 'no-payday' };
+
+        const sorted = [...paydays].sort((a, b) => a.date.localeCompare(b.date));
+        const past   = sorted.filter(p => p.date <= today);
+        const future = sorted.filter(p => p.date >  today);
+
+        if (past.length === 0) {
+          return { state: 'pre-cycle', nextPayday: sorted[0].date };
+        }
+
+        const currentPayday = past[past.length - 1];
+        const nextPayday    = future.length > 0 ? future[0] : null;
+
+        const cycleStart = currentPayday.date;
+        const cycleEnd   = nextPayday
+          ? toDateStr(addDays(new Date(nextPayday.date + 'T12:00:00'), -1))
+          : toDateStr(addDays(new Date(currentPayday.date + 'T12:00:00'), 31));
+
+        // Calculate day N of M
+        const startMs   = new Date(cycleStart + 'T12:00:00').getTime();
+        const endMs     = new Date(cycleEnd   + 'T12:00:00').getTime();
+        const todayMs   = new Date(today      + 'T12:00:00').getTime();
+        const totalDays = Math.round((endMs - startMs) / 86400000) + 1;
+        const currentDay = Math.min(Math.max(Math.round((todayMs - startMs) / 86400000) + 1, 1), totalDays);
+
+        return {
+          state: 'active',
+          cycleStart, cycleEnd,
+          currentDay, totalDays,
+          hasNextPayday: !!nextPayday,
+          snapshot: currentPayday.billsSnapshot || []
+        };
+      },
+
+      // Main render — builds the entire dashboard from stored data.
+      render() {
+        const setup     = Storage.get('burndown_setup');
+        const paydays   = Storage.get('burndown_paydays');
+        const lastCheck = Storage.get('burndown_last_check');
+        const today     = toDateStr(new Date());
+        const container = document.getElementById('dashboard-content');
+
+        if (!setup) { container.innerHTML = ''; return; }
+
+        const cycleState = Dashboard.getCycleState(paydays, today);
+
+        // Pre-cycle: payday hasn't arrived yet
+        if (cycleState.state === 'pre-cycle') {
+          container.innerHTML = Dashboard.buildPreCycle(cycleState);
+          return;
+        }
+
+        // Active cycle
+        if (cycleState.state === 'active') {
+          const isCheckedToday = lastCheck && lastCheck.date === today;
+          const stale          = isCheckedToday && !Dashboard.justCheckedIn;
+
+          container.innerHTML =
+            Dashboard.buildAppBar(cycleState) +
+            (isCheckedToday
+              ? Dashboard.buildStatusCard(setup, cycleState, lastCheck, stale)
+              : Dashboard.buildNoCheckIn()) +
+            Dashboard.buildCheckinSection(isCheckedToday, lastCheck) +
+            Dashboard.buildChart() +
+            Dashboard.buildUpcomingBills(setup, cycleState, today);
+
+          // Draw chart after DOM is ready
+          const series = Engine.getBurndownSeries(setup, cycleState.snapshot, cycleState.cycleStart, cycleState.cycleEnd);
+          const liveBalance = isCheckedToday ? lastCheck.balance : null;
+          const status      = isCheckedToday ? lastCheck.result.status : null;
+          Dashboard.drawChart(series, setup.targetBuffer, today, liveBalance, status);
+        }
+      },
+
+      buildAppBar(cycleState) {
+        return `
+          <div class="db-app-bar">
+            <span class="db-app-title">MONEYBOX</span>
+            <span class="db-day-count">Day ${cycleState.currentDay} of ${cycleState.totalDays}</span>
+          </div>
+          <div class="db-cycle-dates">
+            ${formatShortDate(cycleState.cycleStart)} – ${formatShortDate(cycleState.cycleEnd)}
+            ${!cycleState.hasNextPayday ? ' · <span style="color:#f59e0b">Next pay date not set</span>' : ''}
+          </div>`;
+      },
+
+      buildNoCheckIn() {
+        return `
+          <div class="db-card">
+            <div class="db-section-label">Status</div>
+            <div style="color:#555;font-size:0.875rem">No check-in yet today.</div>
+          </div>`;
+      },
+
+      buildStatusCard(setup, cycleState, lastCheck, stale) {
+        const r          = lastCheck.result;
+        const badgeClass = r.status === 'ON_TRACK' ? 'on-track' : r.status === 'MARGINAL' ? 'marginal' : 'off-track';
+        const badgeText  = r.status === 'ON_TRACK' ? 'On Track'  : r.status === 'MARGINAL' ? 'Marginal' : 'Off Track';
+
+        const gapClass  = (n) => n >= 0 ? 'pos' : 'neg';
+        const signedGBP = (n) => (n >= 0 ? '+' : '−') + formatGBP(Math.abs(n));
+
+        const time = new Date(lastCheck.savedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+        return `
+          <div class="db-card" style="opacity:${stale ? '0.45' : '1'}">
+            <span class="db-badge ${badgeClass}">${badgeText}</span>
+            <div class="db-stat-row">
+              <span class="lbl">Balance</span>
+              <span class="val">${formatGBP(lastCheck.balance)}</span>
+            </div>
+            <div class="db-stat-row">
+              <span class="lbl">Expected today</span>
+              <span class="val">${formatGBP(r.expectedNow)}</span>
+            </div>
+            <div class="db-stat-row">
+              <span class="lbl">vs expected</span>
+              <span class="val ${gapClass(r.immediateGap)}">${signedGBP(r.immediateGap)}</span>
+            </div>
+            <div class="db-stat-row">
+              <span class="lbl">Projected end</span>
+              <span class="val">${formatGBP(r.projectedEnd)}</span>
+            </div>
+            <div class="db-stat-row">
+              <span class="lbl">vs buffer (${formatGBP(setup.targetBuffer)})</span>
+              <span class="val ${gapClass(r.endGap)}">${signedGBP(r.endGap)}</span>
+            </div>
+            <div style="font-size:0.75rem;color:#444;margin-top:0.75rem">Checked at ${time}</div>
+          </div>`;
+      },
+
+      buildCheckinSection(isCheckedToday, lastCheck) {
+        if (isCheckedToday) {
+          return `
+            <div class="db-card">
+              <div class="db-locked-msg">
+                Next check-in available after midnight.
+              </div>
+            </div>`;
+        }
+        return `
+          <div class="db-card">
+            <label class="db-ci-label" for="db-balance-input">Today's balance (£)</label>
+            <input id="db-balance-input" class="db-ci-input" type="text" inputmode="decimal"
+              placeholder="e.g. 1245.00" />
+            <div id="db-ci-error" class="db-ci-error">Enter a valid balance (0 or more)</div>
+            <button class="btn btn-primary" onclick="Dashboard.submitCheckin()">Check in</button>
+          </div>`;
+      },
+
+      buildChart() {
+        return `
+          <div class="db-card">
+            <div class="db-section-label">This cycle</div>
+            <canvas id="burndown-canvas"></canvas>
+          </div>`;
+      },
+
+      buildUpcomingBills(setup, cycleState, today) {
+        const allBills = Engine.getBillsForCycle(
+          cycleState.cycleStart, cycleState.cycleEnd, cycleState.snapshot
+        );
+        const remaining = allBills.filter(b => b.resolvedDate > today);
+
+        if (remaining.length === 0) {
+          return `
+            <div class="db-card">
+              <div class="db-section-label">Upcoming bills</div>
+              <div style="font-size:0.875rem;color:#555">No more bills this cycle.</div>
+            </div>`;
+        }
+
+        const rows = remaining.map(b => `
+          <div class="db-bill-row">
+            <span class="db-bill-name">${escHtml(b.name)}</span>
+            <div class="db-bill-right">
+              <span class="db-bill-amount">−${formatGBP(b.amount)}</span>
+              <span class="db-bill-date">${formatShortDate(b.resolvedDate)}</span>
+            </div>
+          </div>`).join('');
+
+        return `
+          <div class="db-card">
+            <div class="db-section-label">Upcoming bills</div>
+            ${rows}
+          </div>`;
+      },
+
+      buildPreCycle(cycleState) {
+        return `
+          <div class="db-app-bar">
+            <span class="db-app-title">MONEYBOX</span>
+          </div>
+          <div class="db-card db-holding">
+            <h2>Your cycle starts ${formatShortDate(cycleState.nextPayday)}</h2>
+            <p>Check-in will be available from payday.</p>
+          </div>`;
+      },
+
+      // Handles the check-in form submission.
+      submitCheckin() {
+        const input   = document.getElementById('db-balance-input');
+        const errorEl = document.getElementById('db-ci-error');
+        const value   = parseNum(input.value);
+
+        const ok = !isNaN(value) && value >= 0;
+        input.classList.toggle('error', !ok);
+        errorEl.classList.toggle('visible', !ok);
+        if (!ok) return;
+
+        const setup      = Storage.get('burndown_setup');
+        const today      = toDateStr(new Date());
+        const cycleState = Dashboard.getCycleState(Storage.get('burndown_paydays'), today);
+
+        const result = Engine.calculate(
+          setup, cycleState.snapshot,
+          cycleState.cycleStart, cycleState.cycleEnd,
+          today, value
+        );
+
+        Storage.set('burndown_last_check', {
+          date: today, balance: value, result, savedAt: new Date().toISOString()
+        });
+
+        Dashboard.justCheckedIn = true;
+        Dashboard.render();
+      },
+
+      // Draws the burndown chart on the canvas element.
+      // Uses vanilla canvas — no external library.
+      drawChart(series, targetBuffer, today, liveBalance, status) {
+        const canvas = document.getElementById('burndown-canvas');
+        if (!canvas || series.length === 0) return;
+
+        const dpr  = window.devicePixelRatio || 1;
+        const W    = canvas.parentElement.clientWidth - 40; // account for card padding
+        const H    = 180;
+
+        canvas.width        = W * dpr;
+        canvas.height       = H * dpr;
+        canvas.style.width  = W + 'px';
+        canvas.style.height = H + 'px';
+
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+
+        // Padding inside the canvas
+        const PAD = { top: 10, right: 12, bottom: 36, left: 52 };
+        const plotW = W - PAD.left - PAD.right;
+        const plotH = H - PAD.top  - PAD.bottom;
+
+        // Y axis range — include all balances, target buffer, and zero
+        const allVals = [...series.map(p => p.balance), targetBuffer, 0];
+        if (liveBalance !== null) allVals.push(liveBalance);
+        const rawMax = Math.max(...allVals);
+        const rawMin = Math.min(...allVals);
+        const padding = (rawMax - rawMin) * 0.15 || 100;
+        const yMax = rawMax + padding;
+        const yMin = rawMin - padding;
+        const yRange = yMax - yMin || 1;
+
+        const n = series.length;
+
+        // Scale helpers
+        const xOf = i => PAD.left + (n > 1 ? (i / (n - 1)) * plotW : plotW / 2);
+        const yOf = v => PAD.top  + plotH - ((v - yMin) / yRange) * plotH;
+
+        // Background
+        ctx.fillStyle = '#0f1117';
+        ctx.fillRect(0, 0, W, H);
+
+        // Horizontal grid lines
+        ctx.strokeStyle = '#1a1d27';
+        ctx.lineWidth   = 1;
+        const gridCount = 4;
+        for (let g = 0; g <= gridCount; g++) {
+          const v = yMin + (yRange * g / gridCount);
+          const y = yOf(v);
+          ctx.beginPath();
+          ctx.moveTo(PAD.left, y);
+          ctx.lineTo(PAD.left + plotW, y);
+          ctx.stroke();
+        }
+
+        // Target buffer dashed line
+        ctx.strokeStyle = '#374151';
+        ctx.lineWidth   = 1;
+        ctx.setLineDash([4, 4]);
+        const bufY = yOf(targetBuffer);
+        ctx.beginPath();
+        ctx.moveTo(PAD.left, bufY);
+        ctx.lineTo(PAD.left + plotW, bufY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // "Buffer" label on the line
+        ctx.fillStyle  = '#374151';
+        ctx.font       = `${10 * 1}px -apple-system, sans-serif`;
+        ctx.textAlign  = 'right';
+        ctx.fillText('Buffer', PAD.left - 4, bufY + 3);
+
+        // Expected balance line
+        ctx.strokeStyle = '#3b82f6';
+        ctx.lineWidth   = 2;
+        ctx.beginPath();
+        series.forEach((pt, i) => {
+          const x = xOf(i);
+          const y = yOf(pt.balance);
+          if (i === 0) ctx.moveTo(x, y);
+          else         ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        // Today vertical line
+        const todayIdx = series.findIndex(p => p.date === today);
+        if (todayIdx >= 0) {
+          ctx.strokeStyle = '#2a2d3a';
+          ctx.lineWidth   = 1;
+          ctx.setLineDash([3, 3]);
+          const tx = xOf(todayIdx);
+          ctx.beginPath();
+          ctx.moveTo(tx, PAD.top);
+          ctx.lineTo(tx, PAD.top + plotH);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Live balance dot
+        if (liveBalance !== null && todayIdx >= 0) {
+          const dotColor = status === 'ON_TRACK'  ? '#22c55e'
+                         : status === 'MARGINAL'  ? '#f59e0b'
+                         : '#ef4444';
+          const dx = xOf(todayIdx);
+          const dy = yOf(liveBalance);
+
+          // Outer ring
+          ctx.strokeStyle = dotColor;
+          ctx.lineWidth   = 2;
+          ctx.beginPath();
+          ctx.arc(dx, dy, 7, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Inner fill
+          ctx.fillStyle = dotColor;
+          ctx.beginPath();
+          ctx.arc(dx, dy, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Y axis labels
+        ctx.fillStyle = '#555';
+        ctx.font      = '10px -apple-system, sans-serif';
+        ctx.textAlign = 'right';
+        for (let g = 0; g <= gridCount; g++) {
+          const v = yMin + (yRange * g / gridCount);
+          const y = yOf(v);
+          ctx.fillText('£' + Math.round(v), PAD.left - 4, y + 3);
+        }
+
+        // X axis labels — show ~5 evenly spaced dates
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#555';
+        const step = Math.max(1, Math.floor(n / 5));
+        const shownX = new Set();
+
+        for (let i = 0; i < n; i += step) {
+          const x = Math.round(xOf(i));
+          if (!shownX.has(x)) {
+            shownX.add(x);
+            ctx.fillText(formatShortDate(series[i].date), x, H - PAD.bottom + 14);
+          }
+        }
+
+        // Always show last date
+        const lastX = Math.round(xOf(n - 1));
+        if (!shownX.has(lastX)) {
+          ctx.fillText(formatShortDate(series[n - 1].date), lastX, H - PAD.bottom + 14);
+        }
       }
     };
 
@@ -1032,9 +1460,7 @@
         }
       },
 
-      // On every load: if a payday has arrived and its billsSnapshot is null,
-      // take the snapshot now from the live bills list.
-      // This is the trigger point for the snapshot model.
+      // On every load: take a bills snapshot for any payday that has arrived.
       checkSnapshotTrigger() {
         const setup   = Storage.get('burndown_setup');
         const paydays = Storage.get('burndown_paydays');
@@ -1045,7 +1471,6 @@
 
         paydays.forEach(p => {
           if (p.date <= today && p.billsSnapshot === null) {
-            // Deep copy — future edits to setup.bills must not affect this snapshot
             p.billsSnapshot   = JSON.parse(JSON.stringify(setup.bills));
             p.snapshotTakenAt = new Date().toISOString();
             updated = true;
@@ -1060,20 +1485,18 @@
         document.getElementById('debug-version').textContent =
           versionOk ? `${APP_VERSION} ✓` : `wiped → ${APP_VERSION}`;
 
-        // Run test harness if ?test param is present
         if (window.location.search.includes('test')) {
           App.showView('test');
           TestHarness.run();
           return;
         }
 
-        // Check if a payday snapshot needs to be taken
         App.checkSnapshotTrigger();
 
-        // Route to the correct view
         const setup = Storage.get('burndown_setup');
         if (setup) {
           App.showView('dashboard');
+          Dashboard.render();
         } else {
           Setup.showStep(1);
           App.showView('setup');
@@ -1097,77 +1520,61 @@
       render(results) {
         const container = document.getElementById('test-results');
         let passes = 0;
-
         results.forEach(group => {
-          const groupDiv = document.createElement('div');
-          groupDiv.className = `test-result ${group.pass ? 'pass' : 'fail'}`;
-
-          const label = document.createElement('div');
-          label.className = `test-label ${group.pass ? 'pass' : 'fail'}`;
-          label.textContent = `${group.pass ? '✓' : '✗'} ${group.scenario}`;
-          groupDiv.appendChild(label);
-
+          const div = document.createElement('div');
+          div.className = `test-result ${group.pass ? 'pass' : 'fail'}`;
+          const lbl = document.createElement('div');
+          lbl.className = `test-label ${group.pass ? 'pass' : 'fail'}`;
+          lbl.textContent = `${group.pass ? '✓' : '✗'} ${group.scenario}`;
+          div.appendChild(lbl);
           group.checks.forEach(c => {
             const d = document.createElement('div');
-            d.className = 'test-detail';
+            d.className   = 'test-detail';
             d.textContent = `  ${c.pass ? '✓' : '✗'} ${c.label}: got ${c.actual}, expected ${c.expected}${c.detail ? ' — ' + c.detail : ''}`;
-            groupDiv.appendChild(d);
+            div.appendChild(d);
           });
-
-          container.appendChild(groupDiv);
+          container.appendChild(div);
           if (group.pass) passes++;
         });
-
         const summary = document.createElement('div');
-        summary.className = `test-summary ${passes === results.length ? 'all-pass' : 'has-fail'}`;
+        summary.className   = `test-summary ${passes === results.length ? 'all-pass' : 'has-fail'}`;
         summary.textContent = `${passes} / ${results.length} scenarios passed`;
         container.appendChild(summary);
       },
 
       run() {
         const results = [];
-
-        const setup = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
-        // startingBalance = 2400 - 600 = 1800
-
+        const setup   = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
         const snapshot = [
           { id: '1', name: 'Rent',    amount: 800, dayOfMonth: 1  },
           { id: '2', name: 'Phone',   amount: 40,  dayOfMonth: 10 },
           { id: '3', name: 'Netflix', amount: 18,  dayOfMonth: 20 }
         ];
-        // Total bills: £858
-
         const cycleStart = '2026-05-28';
         const cycleEnd   = '2026-06-24';
 
-        // ── S1: Mid-cycle, on track ───────────────────────────────
-        // Today: 15 Jun. Passed: Rent (1 Jun £800) + Phone (10 Jun £40) = £840
-        // expectedNow  = 1800 - 840 = 960
-        // Remaining:     Netflix (20 Jun £18)
-        // projectedEnd = 1000 - 18 = 982
-        // endGap       = 982 - 150 = 832 → ON_TRACK
-        // immediateGap = 1000 - 960 = +40
+        // S1: Mid-cycle, on track
+        // Passed: Rent (1 Jun £800) + Phone (10 Jun £40) = £840
+        // expectedNow = 1800 - 840 = 960 | projectedEnd = 1000 - 18 = 982
+        // endGap = 982 - 150 = 832 → ON_TRACK | immediateGap = 1000 - 960 = +40
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 1000);
           const checks = [
-            TestHarness.assertEq('status',       r.status,       'ON_TRACK'),
-            TestHarness.assert('expectedNow',    r.expectedNow,   960),
-            TestHarness.assert('projectedEnd',   r.projectedEnd,  982),
-            TestHarness.assert('endGap',         r.endGap,        832),
-            TestHarness.assert('immediateGap',   r.immediateGap,   40)
+            TestHarness.assertEq('status',     r.status,      'ON_TRACK'),
+            TestHarness.assert('expectedNow',  r.expectedNow,   960),
+            TestHarness.assert('projectedEnd', r.projectedEnd,  982),
+            TestHarness.assert('endGap',       r.endGap,        832),
+            TestHarness.assert('immediateGap', r.immediateGap,   40)
           ];
           results.push({ scenario: 'S1: Mid-cycle, on track', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S2: Mid-cycle, off track ──────────────────────────────
-        // Same date (15 Jun), balance = 100
-        // projectedEnd = 100 - 18 = 82
-        // endGap       = 82 - 150 = -68 → OFF_TRACK
-        // immediateGap = 100 - 960 = -860
+        // S2: Mid-cycle, off track
+        // balance = 100 | projectedEnd = 82 | endGap = -68 → OFF_TRACK | immediateGap = -860
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 100);
           const checks = [
-            TestHarness.assertEq('status',     r.status,       'OFF_TRACK'),
+            TestHarness.assertEq('status',     r.status,      'OFF_TRACK'),
             TestHarness.assert('projectedEnd', r.projectedEnd,   82),
             TestHarness.assert('endGap',       r.endGap,        -68),
             TestHarness.assert('immediateGap', r.immediateGap,  -860)
@@ -1175,9 +1582,8 @@
           results.push({ scenario: 'S2: Mid-cycle, off track', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S3: Mid-cycle, marginal ───────────────────────────────
-        // endGap must be between -20 and +20
-        // Target: endGap = +10 → projectedEnd = 160 → liveBalance = 160 + 18 = 178
+        // S3: Marginal
+        // endGap = +10 → projectedEnd = 160 → liveBalance = 178
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-15', 178);
           const checks = [
@@ -1187,10 +1593,8 @@
           results.push({ scenario: 'S3: Mid-cycle, marginal', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S4: Bill falls today counts as passed ─────────────────
-        // Today: 10 Jun (Phone bill day)
-        // passedBills: Rent (1 Jun) + Phone (10 Jun) = 2 bills, £840
-        // expectedNow = 1800 - 840 = 960
+        // S4: Bill falls today counts as passed
+        // Today = 10 Jun (Phone day) → 2 bills passed, expectedNow = 960
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-10', 1000);
           const checks = [
@@ -1200,11 +1604,9 @@
           results.push({ scenario: 'S4: Bill falls today counts as passed', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S5: Late-month bill resolves to 1st of next month ─────
-        // Bill on day 31, in June (only 30 days) → resolves to 1st July
-        // Cycle: 28 May → 24 July (captures 1st July, excludes 31st July)
-        // Today: 15 Jun → bill is still in remaining
-        // Expected: remainingBills.length = 1, resolvedDate = '2026-07-01'
+        // S5: 31st June → resolves to 1st July
+        // Cycle: 28 May → 24 Jul (captures 1st Jul, excludes 31st Jul)
+        // Today: 15 Jun → bill still in remaining
         {
           const lateSetup = { netPay: 2400, billsTransfer: 600, targetBuffer: 150 };
           const lateSnap  = [{ id: '9', name: 'LateOne', amount: 50, dayOfMonth: 31 }];
@@ -1217,10 +1619,8 @@
           results.push({ scenario: 'S5: Late-month bill resolves to 1st of next month', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S6: First day of cycle ────────────────────────────────
-        // Today: 28 May (payday). No bills passed yet.
-        // expectedNow  = 1800 - 0 = 1800
-        // immediateGap = 1800 - 1800 = 0
+        // S6: First day of cycle
+        // Today = payday (28 May) → 0 bills passed, expectedNow = 1800, immediateGap = 0
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-05-28', 1800);
           const checks = [
@@ -1231,15 +1631,12 @@
           results.push({ scenario: 'S6: First day of cycle', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S7: Last day of cycle ─────────────────────────────────
-        // Today: 24 Jun. All bills passed: Rent + Phone + Netflix = £858
-        // expectedNow  = 1800 - 858 = 942
-        // remainingBills = 0
-        // projectedEnd = liveBalance(950) - 0 = 950
+        // S7: Last day of cycle
+        // Today = 24 Jun → all 3 bills passed, remainingBills = 0, projectedEnd = liveBalance
         {
           const r = Engine.calculate(setup, snapshot, cycleStart, cycleEnd, '2026-06-24', 950);
           const checks = [
-            TestHarness.assert('passedBills count',    r.passedBills.length,   3, 'All bills passed'),
+            TestHarness.assert('passedBills count',    r.passedBills.length,   3),
             TestHarness.assert('remainingBills count', r.remainingBills.length, 0),
             TestHarness.assert('projectedEnd',         r.projectedEnd,          950),
             TestHarness.assert('expectedNow',          r.expectedNow,           942)
@@ -1247,15 +1644,15 @@
           results.push({ scenario: 'S7: Last day of cycle', pass: checks.every(c => c.pass), checks });
         }
 
-        // ── S8: Engine uses snapshot, not live bills ──────────────
-        // Snapshot has only Rent. Phone is in live bills but must NOT appear in results.
-        // Total bills in cycle from snapshot: 1
+        // S8: Engine uses snapshot, not live bills
+        // Snapshot has only Rent → Phone must not appear
         {
           const snapOnly = [{ id: '1', name: 'Rent', amount: 800, dayOfMonth: 1 }];
           const r = Engine.calculate(setup, snapOnly, cycleStart, cycleEnd, '2026-06-15', 1000);
           const checks = [
             TestHarness.assert(
-              'total bills in cycle', r.passedBills.length + r.remainingBills.length, 1,
+              'total bills in cycle',
+              r.passedBills.length + r.remainingBills.length, 1,
               'Phone not in snapshot — must not appear'
             )
           ];
@@ -1268,13 +1665,11 @@
 
     // ─── Entry Point ─────────────────────────────────────────────
 
-    // Report JS parse/runtime errors on-screen (no DevTools needed on mobile)
     window.addEventListener('error', e => {
       const el = document.getElementById('debug-error');
       if (el) el.textContent = `JS Error: ${e.message} (line ${e.lineno})`;
     });
 
-    // Single DOMContentLoaded listener — all init happens through App.init()
     document.addEventListener('DOMContentLoaded', () => {
       try {
         App.init();
