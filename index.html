@@ -1279,6 +1279,7 @@
 
         const setup      = Storage.get('burndown_setup');
         const today      = toDateStr(new Date());
+        alert(JSON.stringify(Storage.get('burndown_setup').bills));
         const cycleState = Dashboard.getCycleState(Storage.get('burndown_paydays'), today);
 
         const result = Engine.calculate(
