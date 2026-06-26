@@ -408,6 +408,211 @@
     /* Canvas chart */
     #view-dashboard canvas { display: block; width: 100%; }
 
+    /* ─── Pay Date Panel ────────────────────────────────────────── */
+    .pd-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+    }
+
+    .pd-overlay.open { display: block; }
+
+    .pd-panel {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #1a1d27;
+      border-top: 1px solid #2a2d3a;
+      border-radius: 16px 16px 0 0;
+      padding: 1.5rem 1.25rem 2.5rem;
+      max-width: 480px;
+      margin: 0 auto;
+      z-index: 201;
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
+    }
+
+    .pd-overlay.open .pd-panel { transform: translateY(0); }
+
+    .pd-panel-handle {
+      width: 36px; height: 4px;
+      background: #2a2d3a;
+      border-radius: 2px;
+      margin: 0 auto 1.25rem;
+    }
+
+    .pd-panel h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+
+    .pd-row {
+      margin-bottom: 1.25rem;
+    }
+
+    .pd-row label {
+      display: block;
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.35rem;
+    }
+
+    .pd-row input[type="date"] {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      color: #f0f0f0;
+      min-height: 44px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .pd-row input[type="date"]:focus { border-color: #3b82f6; }
+    .pd-row input[type="date"].error { border-color: #ef4444; }
+    .pd-row input[type="date"]:disabled { opacity: 0.4; }
+
+    .pd-row-error {
+      display: none;
+      font-size: 0.8rem;
+      color: #ef4444;
+      margin-top: 0.35rem;
+    }
+
+    .pd-row-error.visible { display: block; }
+
+    .pd-danger-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+      color: #f59e0b;
+      margin-bottom: 0.35rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .pd-danger-toggle .pd-toggle-icon { font-size: 0.9rem; }
+
+    .pd-danger-warning {
+      font-size: 0.75rem;
+      color: #f59e0b;
+      background: #3f2a00;
+      border: 1px solid #92400e;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    .pd-danger-warning.visible { display: block; }
+
+    /* Calendar icon button in app bar */
+    .db-cal-btn {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 1rem;
+      line-height: 1;
+      vertical-align: middle;
+      margin-left: 0.5rem;
+    }
+
+    .db-cal-btn:hover { color: #888; }
+
+    /* ─── Expired Cycle Modal ───────────────────────────────────── */
+    .exp-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .exp-overlay.open { display: flex; }
+
+    .exp-modal {
+      background: #1a1d27;
+      border: 1px solid #2a2d3a;
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem 1.25rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .exp-modal h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-modal p {
+      font-size: 0.875rem;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    .exp-modal .field label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #ccc;
+      margin-bottom: 0.4rem;
+    }
+
+    .exp-modal .field input[type="date"] {
+      width: 100%;
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      color: #f0f0f0;
+      min-height: 44px;
+      outline: none;
+      margin-bottom: 0.75rem;
+      -webkit-appearance: none;
+    }
+
+    .exp-modal .field input[type="date"]:focus { border-color: #3b82f6; }
+    .exp-modal .field input[type="date"].error  { border-color: #ef4444; }
+
+    .exp-modal-error {
+      display: none;
+      font-size: 0.8rem;
+      color: #ef4444;
+      margin-bottom: 0.6rem;
+    }
+
+    .exp-modal-error.visible { display: block; }
+
+    .exp-dismiss {
+      display: block;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #444;
+      margin-top: 0.9rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+      width: 100%;
+      padding: 0.5rem;
+    }
+
     /* ─── Test View ─────────────────────────────────────────────── */
     #view-test { padding-top: 1rem; }
     #test-output { width: 100%; font-family: monospace; font-size: 0.8rem; }
@@ -626,9 +831,51 @@
     </div>
   </div>
 
+  <!-- ─── Pay Date Panel ────────────────────────────────────── -->
+  <div id="pd-overlay" class="pd-overlay" onclick="PayDatePanel.handleOverlayClick(event)">
+    <div class="pd-panel">
+      <div class="pd-panel-handle"></div>
+      <h2>Pay dates</h2>
+
+      <div class="pd-row">
+        <button class="pd-danger-toggle" id="pd-current-toggle" onclick="PayDatePanel.toggleCurrentEdit()">
+          <span class="pd-toggle-icon">🔒</span> Current payday — tap to edit
+        </button>
+        <div class="pd-danger-warning" id="pd-current-warning">
+          Changing this affects your current cycle calculations. Use for corrections only.
+        </div>
+        <input type="date" id="pd-current-input" disabled />
+        <div class="pd-row-error" id="pd-current-error">Enter a valid date</div>
+      </div>
+
+      <div class="pd-row">
+        <label for="pd-next-input">Next payday</label>
+        <input type="date" id="pd-next-input" />
+        <div class="pd-row-error" id="pd-next-error">Enter a date after the current payday</div>
+      </div>
+
+      <button class="btn btn-primary" onclick="PayDatePanel.save()" style="margin-top:0.5rem">Save</button>
+    </div>
+  </div>
+
+  <!-- ─── Expired Cycle Modal ────────────────────────────────── -->
+  <div id="exp-overlay" class="exp-overlay">
+    <div class="exp-modal">
+      <h2>Your cycle has ended</h2>
+      <p>Enter your next payday to start a new cycle and keep your tracking accurate.</p>
+      <div class="field">
+        <label for="exp-payday-input">Next payday</label>
+        <input type="date" id="exp-payday-input" />
+        <div class="exp-modal-error" id="exp-modal-error">Enter a valid future date</div>
+        <button class="btn btn-primary" onclick="PayDatePanel.saveFromModal()">Set payday →</button>
+      </div>
+      <button class="exp-dismiss" onclick="PayDatePanel.dismissModal()">Remind me later</button>
+    </div>
+  </div>
+
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 4 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 5 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -1142,14 +1389,20 @@
       },
 
       buildAppBar(cycleState) {
+        const warningHtml = !cycleState.hasNextPayday
+          ? ` · <span style="color:#f59e0b;cursor:pointer" onclick="PayDatePanel.open()">Next pay date not set</span>`
+          : '';
         return `
           <div class="db-app-bar">
             <span class="db-app-title">MONEYBOX</span>
-            <span class="db-day-count">Day ${cycleState.currentDay} of ${cycleState.totalDays}</span>
+            <span>
+              <span class="db-day-count">Day ${cycleState.currentDay} of ${cycleState.totalDays}</span>
+              <button class="db-cal-btn" onclick="PayDatePanel.open()" title="Pay dates">📅</button>
+            </span>
           </div>
           <div class="db-cycle-dates">
             ${formatShortDate(cycleState.cycleStart)} – ${formatShortDate(cycleState.cycleEnd)}
-            ${!cycleState.hasNextPayday ? ' · <span style="color:#f59e0b">Next pay date not set</span>' : ''}
+            ${warningHtml}
           </div>`;
       },
 
@@ -1497,9 +1750,191 @@
         if (setup) {
           App.showView('dashboard');
           Dashboard.render();
+          PayDatePanel.checkExpired();
         } else {
           Setup.showStep(1);
           App.showView('setup');
+        }
+      }
+    };
+
+    // ─── Pay Date Panel ──────────────────────────────────────────
+    const PayDatePanel = {
+
+      open() {
+        const paydays = Storage.get('burndown_paydays') || [];
+        const sorted  = [...paydays].sort((a, b) => a.date.localeCompare(b.date));
+        const today   = toDateStr(new Date());
+        const past    = sorted.filter(p => p.date <= today);
+        const future  = sorted.filter(p => p.date >  today);
+
+        const currentDate = past.length > 0 ? past[past.length - 1].date : '';
+        const nextDate    = future.length > 0 ? future[0].date : '';
+
+        // Reset panel state
+        const currentInput  = document.getElementById('pd-current-input');
+        const currentToggle = document.getElementById('pd-current-toggle');
+        const currentWarn   = document.getElementById('pd-current-warning');
+        const nextInput     = document.getElementById('pd-next-input');
+
+        currentInput.value    = currentDate;
+        currentInput.disabled = true;
+        currentToggle.innerHTML = '<span class="pd-toggle-icon">🔒</span> Current payday — tap to edit';
+        currentWarn.classList.remove('visible');
+        nextInput.value = nextDate;
+
+        document.getElementById('pd-current-error').classList.remove('visible');
+        document.getElementById('pd-next-error').classList.remove('visible');
+        currentInput.classList.remove('error');
+        nextInput.classList.remove('error');
+
+        document.getElementById('pd-overlay').classList.add('open');
+      },
+
+      close() {
+        document.getElementById('pd-overlay').classList.remove('open');
+      },
+
+      handleOverlayClick(e) {
+        // Close if clicking the backdrop, not the panel itself
+        if (e.target === document.getElementById('pd-overlay')) {
+          PayDatePanel.close();
+        }
+      },
+
+      toggleCurrentEdit() {
+        const input   = document.getElementById('pd-current-input');
+        const toggle  = document.getElementById('pd-current-toggle');
+        const warning = document.getElementById('pd-current-warning');
+
+        if (input.disabled) {
+          input.disabled = false;
+          input.focus();
+          toggle.innerHTML = '<span class="pd-toggle-icon">⚠️</span> Current payday — editing';
+          warning.classList.add('visible');
+        } else {
+          input.disabled = true;
+          toggle.innerHTML = '<span class="pd-toggle-icon">🔒</span> Current payday — tap to edit';
+          warning.classList.remove('visible');
+        }
+      },
+
+      save() {
+        const paydays = Storage.get('burndown_paydays') || [];
+        const sorted  = [...paydays].sort((a, b) => a.date.localeCompare(b.date));
+        const today   = toDateStr(new Date());
+        const past    = sorted.filter(p => p.date <= today);
+        const future  = sorted.filter(p => p.date >  today);
+
+        const currentInput = document.getElementById('pd-current-input');
+        const nextInput    = document.getElementById('pd-next-input');
+        const currentErr   = document.getElementById('pd-current-error');
+        const nextErr      = document.getElementById('pd-next-error');
+
+        let valid = true;
+
+        // Validate current payday if unlocked
+        const currentEditing = !currentInput.disabled;
+        if (currentEditing) {
+          const currentVal = currentInput.value;
+          const ok = currentVal && /^\d{4}-\d{2}-\d{2}$/.test(currentVal);
+          currentInput.classList.toggle('error', !ok);
+          currentErr.classList.toggle('visible', !ok);
+          if (!ok) valid = false;
+        }
+
+        // Validate next payday (optional — only validate if something entered)
+        const nextVal = nextInput.value;
+        const currentDateForComparison = currentEditing
+          ? currentInput.value
+          : (past.length > 0 ? past[past.length - 1].date : today);
+
+        if (nextVal) {
+          const nextOk = /^\d{4}-\d{2}-\d{2}$/.test(nextVal) && nextVal > currentDateForComparison;
+          nextInput.classList.toggle('error', !nextOk);
+          nextErr.classList.toggle('visible', !nextOk);
+          if (!nextOk) valid = false;
+        } else {
+          nextInput.classList.remove('error');
+          nextErr.classList.remove('visible');
+        }
+
+        if (!valid) return;
+
+        // Rebuild paydays array
+        const newPaydays = [];
+
+        // Current payday
+        if (currentEditing && currentInput.value) {
+          const existing = past.length > 0 ? past[past.length - 1] : null;
+          newPaydays.push({
+            date:          currentInput.value,
+            billsSnapshot: existing ? existing.billsSnapshot : null,
+            addedAt:       existing ? existing.addedAt : new Date().toISOString()
+          });
+        } else if (past.length > 0) {
+          newPaydays.push(past[past.length - 1]);
+        }
+
+        // Next payday
+        if (nextVal) {
+          // Check if this next payday already exists in storage
+          const existingNext = future.find(p => p.date === nextVal);
+          newPaydays.push(existingNext || {
+            date:          nextVal,
+            billsSnapshot: null,
+            addedAt:       new Date().toISOString()
+          });
+        }
+
+        Storage.set('burndown_paydays', newPaydays);
+        App.checkSnapshotTrigger();
+        PayDatePanel.close();
+        Dashboard.render();
+      },
+
+      // Save from the expired cycle modal
+      saveFromModal() {
+        const input   = document.getElementById('exp-payday-input');
+        const errorEl = document.getElementById('exp-modal-error');
+        const today   = toDateStr(new Date());
+        const val     = input.value;
+
+        const ok = val && /^\d{4}-\d{2}-\d{2}$/.test(val) && val > today;
+        input.classList.toggle('error', !ok);
+        errorEl.classList.toggle('visible', !ok);
+        if (!ok) return;
+
+        const paydays = Storage.get('burndown_paydays') || [];
+        paydays.push({ date: val, billsSnapshot: null, addedAt: new Date().toISOString() });
+        Storage.set('burndown_paydays', paydays);
+
+        PayDatePanel.closeModal();
+        App.checkSnapshotTrigger();
+        Dashboard.render();
+      },
+
+      dismissModal() {
+        PayDatePanel.closeModal();
+      },
+
+      closeModal() {
+        document.getElementById('exp-overlay').classList.remove('open');
+      },
+
+      // Check if cycle has expired and no next payday is set — show modal if so
+      checkExpired() {
+        const paydays = Storage.get('burndown_paydays');
+        const today   = toDateStr(new Date());
+        if (!paydays) return;
+
+        const cycleState = Dashboard.getCycleState(paydays, today);
+        if (cycleState.state !== 'active') return;
+        if (cycleState.hasNextPayday) return;
+
+        // Cycle is expired if today is past cycleEnd
+        if (today > cycleState.cycleEnd) {
+          document.getElementById('exp-overlay').classList.add('open');
         }
       }
     };
