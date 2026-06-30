@@ -27,7 +27,7 @@
     .setup-step.active { display: block; }
 
     /* ─── Setup View — all CSS scoped to #view-setup ────────────── */
-    #view-setup .setup-card {
+    #view-setup .setup-card, #view-edit-setup .setup-card {
       background: #1a1d27;
       border: 1px solid #2a2d3a;
       border-radius: 12px;
@@ -35,43 +35,43 @@
       margin-top: 1.5rem;
     }
 
-    #view-setup .step-label {
+    #view-setup .step-label, #view-edit-setup .step-label {
       font-size: 0.75rem;
       color: #555;
       text-align: right;
       margin-bottom: 0.5rem;
     }
 
-    #view-setup .progress-bar {
+    #view-setup .progress-bar, #view-edit-setup .progress-bar {
       height: 3px;
       background: #2a2d3a;
       border-radius: 2px;
       margin-bottom: 1.5rem;
     }
 
-    #view-setup .progress-fill {
+    #view-setup .progress-fill, #view-edit-setup .progress-fill {
       height: 100%;
       background: #3b82f6;
       border-radius: 2px;
     }
 
-    #view-setup .setup-header { margin-bottom: 1.5rem; }
+    #view-setup .setup-header, #view-edit-setup .setup-header { margin-bottom: 1.5rem; }
 
-    #view-setup .setup-header h1 {
+    #view-setup .setup-header h1, #view-edit-setup .setup-header h1 {
       font-size: 1.25rem;
       font-weight: 700;
       color: #ffffff;
       margin-bottom: 0.25rem;
     }
 
-    #view-setup .setup-header p {
+    #view-setup .setup-header p, #view-edit-setup .setup-header p {
       font-size: 0.875rem;
       color: #888;
     }
 
-    #view-setup .field { margin-bottom: 1.25rem; }
+    #view-setup .field, #view-edit-setup .field { margin-bottom: 1.25rem; }
 
-    #view-setup .field label {
+    #view-setup .field label, #view-edit-setup .field label {
       display: block;
       font-size: 0.875rem;
       font-weight: 500;
@@ -79,7 +79,7 @@
       margin-bottom: 0.4rem;
     }
 
-    #view-setup .field input {
+    #view-setup .field input, #view-edit-setup .field input {
       width: 100%;
       background: #0f1117;
       border: 1px solid #2a2d3a;
@@ -92,38 +92,38 @@
       -webkit-appearance: none;
     }
 
-    #view-setup .field input:focus { border-color: #3b82f6; }
-    #view-setup .field input.error { border-color: #ef4444; }
+    #view-setup .field input:focus, #view-edit-setup .field input:focus { border-color: #3b82f6; }
+    #view-setup .field input.error, #view-edit-setup .field input.error { border-color: #ef4444; }
 
-    #view-setup .field .field-hint {
+    #view-setup .field .field-hint, #view-edit-setup .field .field-hint {
       font-size: 0.8rem;
       color: #555;
       margin-top: 0.35rem;
     }
 
-    #view-setup .field .field-error {
+    #view-setup .field .field-error, #view-edit-setup .field .field-error {
       display: none;
       font-size: 0.8rem;
       color: #ef4444;
       margin-top: 0.35rem;
     }
 
-    #view-setup .field .field-error.visible { display: block; }
+    #view-setup .field .field-error.visible, #view-edit-setup .field .field-error.visible { display: block; }
 
-    #view-setup .bill-list {
+    #view-setup .bill-list, #view-edit-setup .bill-list {
       margin-top: 1.25rem;
       border-top: 1px solid #2a2d3a;
       padding-top: 1rem;
     }
 
-    #view-setup .bill-list-empty {
+    #view-setup .bill-list-empty, #view-edit-setup .bill-list-empty {
       font-size: 0.875rem;
       color: #555;
       text-align: center;
       padding: 0.75rem 0;
     }
 
-    #view-setup .bill-item {
+    #view-setup .bill-item, #view-edit-setup .bill-item {
       background: #0f1117;
       border: 1px solid #2a2d3a;
       border-radius: 8px;
@@ -131,31 +131,31 @@
       margin-bottom: 0.5rem;
     }
 
-    #view-setup .bill-item-row {
+    #view-setup .bill-item-row, #view-edit-setup .bill-item-row {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
 
-    #view-setup .bill-item-name {
+    #view-setup .bill-item-name, #view-edit-setup .bill-item-name {
       font-size: 0.9rem;
       font-weight: 600;
       color: #f0f0f0;
     }
 
-    #view-setup .bill-item-detail {
+    #view-setup .bill-item-detail, #view-edit-setup .bill-item-detail {
       font-size: 0.8rem;
       color: #888;
       margin-top: 0.2rem;
     }
 
-    #view-setup .bill-item-short-month {
+    #view-setup .bill-item-short-month, #view-edit-setup .bill-item-short-month {
       font-size: 0.75rem;
       color: #f59e0b;
       margin-top: 0.3rem;
     }
 
-    #view-setup .btn-delete {
+    #view-setup .btn-delete, #view-edit-setup .btn-delete {
       background: none;
       border: 1px solid #374151;
       border-radius: 6px;
@@ -168,7 +168,7 @@
       margin-left: 0.75rem;
     }
 
-    #view-setup .bill-confirm-row {
+    #view-setup .bill-confirm-row, #view-edit-setup .bill-confirm-row {
       display: flex;
       align-items: center;
       gap: 0.5rem;
@@ -177,13 +177,13 @@
       border-top: 1px solid #2a2d3a;
     }
 
-    #view-setup .bill-confirm-row span {
+    #view-setup .bill-confirm-row span, #view-edit-setup .bill-confirm-row span {
       font-size: 0.8rem;
       color: #ef4444;
       flex: 1;
     }
 
-    #view-setup .review-section-label {
+    #view-setup .review-section-label, #view-edit-setup .review-section-label {
       font-size: 0.7rem;
       color: #555;
       text-transform: uppercase;
@@ -191,7 +191,7 @@
       margin: 1.25rem 0 0.5rem;
     }
 
-    #view-setup .review-row {
+    #view-setup .review-row, #view-edit-setup .review-row {
       display: flex;
       justify-content: space-between;
       align-items: baseline;
@@ -200,10 +200,10 @@
       font-size: 0.9rem;
     }
 
-    #view-setup .review-row .lbl { color: #888; }
-    #view-setup .review-row .val { font-weight: 600; }
+    #view-setup .review-row .lbl, #view-edit-setup .review-row .lbl { color: #888; }
+    #view-setup .review-row .val, #view-edit-setup .review-row .val { font-weight: 600; }
 
-    #view-setup .review-row.total {
+    #view-setup .review-row, #view-edit-setup .review-row.total {
       border-top: 1px solid #2a2d3a;
       border-bottom: none;
       padding-top: 0.65rem;
@@ -211,10 +211,10 @@
       font-size: 0.95rem;
     }
 
-    #view-setup .review-row.positive .val { color: #22c55e; }
-    #view-setup .review-row.negative .val { color: #ef4444; }
+    #view-setup .review-row, #view-edit-setup .review-row.positive .val { color: #22c55e; }
+    #view-setup .review-row, #view-edit-setup .review-row.negative .val { color: #ef4444; }
 
-    #view-setup .warning-panel {
+    #view-setup .warning-panel, #view-edit-setup .warning-panel {
       background: #451a03;
       border: 1px solid #92400e;
       border-radius: 8px;
@@ -222,14 +222,14 @@
       margin-top: 1.25rem;
     }
 
-    #view-setup .warning-panel p {
+    #view-setup .warning-panel p, #view-edit-setup .warning-panel p {
       font-size: 0.875rem;
       color: #fcd34d;
       margin-bottom: 0.75rem;
       line-height: 1.5;
     }
 
-    #view-setup .warning-check {
+    #view-setup .warning-check, #view-edit-setup .warning-check {
       display: flex;
       align-items: center;
       gap: 0.6rem;
@@ -238,13 +238,13 @@
       cursor: pointer;
     }
 
-    #view-setup .warning-check input[type="checkbox"] {
+    #view-setup .warning-check input[type="checkbox"], #view-edit-setup .warning-check input[type="checkbox"] {
       width: 18px;
       height: 18px;
       flex-shrink: 0;
     }
 
-    #view-setup .setup-nav {
+    #view-setup .setup-nav, #view-edit-setup .setup-nav {
       display: flex;
       gap: 0.75rem;
       margin-top: 1.5rem;
@@ -528,6 +528,181 @@
     }
 
     .db-cal-btn:hover { color: #888; }
+
+    /* ─── Settings Panel — slides in from the right ──────────────── */
+    .st-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+    }
+
+    .st-overlay.open { display: block; }
+
+    .st-panel {
+      position: fixed;
+      top: 0; bottom: 0; right: 0;
+      width: 88%;
+      max-width: 420px;
+      background: #1a1d27;
+      border-left: 1px solid #2a2d3a;
+      padding: 1.5rem 1.25rem 2.5rem;
+      overflow-y: auto;
+      z-index: 201;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+    }
+
+    .st-overlay.open .st-panel { transform: translateX(0); }
+
+    .st-panel h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+
+    .st-section {
+      border-top: 1px solid #2a2d3a;
+      padding-top: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .st-section:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+
+    .st-section-label {
+      font-size: 0.7rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.6rem;
+    }
+
+    .st-section-hint {
+      font-size: 0.8rem;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Restore accordion */
+    .st-accordion-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      background: none;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #f0f0f0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .st-accordion-body { display: none; margin-top: 0.85rem; }
+    .st-accordion-body.open { display: block; }
+
+    .st-textarea {
+      width: 100%;
+      min-height: 140px;
+      background: #0f1117;
+      border: 1px solid #2a2d3a;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #ccc;
+      resize: vertical;
+      outline: none;
+    }
+
+    .st-textarea:focus { border-color: #3b82f6; }
+
+    .st-copy-status {
+      font-size: 0.75rem;
+      color: #22c55e;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .st-copy-status.visible { display: block; }
+
+    .st-error-block {
+      display: none;
+      background: #450a0a;
+      border: 1px solid #7f1d1d;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .st-error-block.visible { display: block; }
+
+    .st-error-block .st-error-headline {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #fca5a5;
+      margin-bottom: 0.5rem;
+    }
+
+    .st-error-block ul {
+      list-style: none;
+      font-size: 0.75rem;
+      color: #ef9a9a;
+      line-height: 1.6;
+    }
+
+    .st-confirm-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid #2a2d3a;
+    }
+
+    .st-confirm-row span { font-size: 0.8rem; color: #f59e0b; flex: 1; }
+
+    /* Settings icon button in app bar */
+    .db-settings-btn {
+      background: none;
+      border: none;
+      color: #555;
+      cursor: pointer;
+      padding: 0.25rem;
+      font-size: 1rem;
+      line-height: 1;
+      vertical-align: middle;
+      margin-left: 0.35rem;
+    }
+
+    .db-settings-btn:hover { color: #888; }
+
+    /* ─── Edit Setup Review — diff groups ─────────────────────────── */
+    #view-edit-setup .diff-group { margin-bottom: 1rem; }
+
+    #view-edit-setup .diff-group-label {
+      font-size: 0.7rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+
+    #view-edit-setup .diff-row {
+      font-size: 0.875rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid #1f2335;
+    }
+
+    #view-edit-setup .diff-row.added   { color: #22c55e; }
+    #view-edit-setup .diff-row.removed { color: #ef4444; }
+    #view-edit-setup .diff-row.edited  { color: #f59e0b; }
+    #view-edit-setup .diff-row .diff-from { color: #555; text-decoration: line-through; margin-right: 0.4rem; }
+    #view-edit-setup .diff-none { font-size: 0.8rem; color: #444; padding: 0.35rem 0; }
 
     /* ─── Expired Cycle Modal ───────────────────────────────────── */
     .exp-overlay {
@@ -818,6 +993,79 @@
 
   </div><!-- end #view-setup -->
 
+  <!-- ─── Edit Setup View ─────────────────────────────────────── -->
+  <div id="view-edit-setup" class="view">
+
+    <!-- Step 1: Edit fields & bills -->
+    <div id="es-step-1" class="setup-step">
+      <div class="setup-card">
+        <div class="setup-header">
+          <h1>Edit setup</h1>
+          <p>Changes apply from your next pay cycle.</p>
+        </div>
+
+        <div class="field">
+          <label for="es1-net-pay">Net pay (£)</label>
+          <input id="es1-net-pay" type="text" inputmode="decimal" />
+          <div id="es1-err-net-pay" class="field-error">Enter a valid amount greater than zero</div>
+        </div>
+
+        <div class="field">
+          <label for="es1-bills-transfer">Bills account transfer (£)</label>
+          <input id="es1-bills-transfer" type="text" inputmode="decimal" />
+          <div id="es1-err-bills-transfer" class="field-error">Enter a valid amount greater than zero</div>
+        </div>
+
+        <div class="field">
+          <label for="es1-buffer">Target end-of-cycle buffer (£)</label>
+          <input id="es1-buffer" type="text" inputmode="decimal" />
+          <div id="es1-err-buffer" class="field-error">Enter a valid amount greater than zero</div>
+        </div>
+
+        <div class="field" style="margin-bottom:0.5rem">
+          <label for="es2-name">Bill name</label>
+          <input id="es2-name" type="text" placeholder="e.g. Spotify" autocomplete="off" />
+          <div id="es2-err-name" class="field-error">Enter a bill name</div>
+        </div>
+
+        <div class="field">
+          <label for="es2-amount">Amount (£)</label>
+          <input id="es2-amount" type="text" inputmode="decimal" placeholder="e.g. 11.99" />
+          <div id="es2-err-amount" class="field-error">Enter a valid amount greater than zero</div>
+        </div>
+
+        <div class="field">
+          <label for="es2-day">Day of month</label>
+          <input id="es2-day" type="number" min="1" max="31" placeholder="e.g. 7" />
+          <div id="es2-err-day" class="field-error">Enter a day between 1 and 31</div>
+        </div>
+
+        <button class="btn btn-secondary" onclick="EditSetup.addBill()">+ Add bill</button>
+
+        <div class="bill-list" id="es-bill-list">
+          <div class="bill-list-empty" id="es-bill-list-empty">No bills added yet.</div>
+        </div>
+
+        <div class="setup-nav">
+          <button class="btn btn-back" onclick="EditSetup.cancel()">Cancel</button>
+          <button class="btn btn-primary" onclick="EditSetup.showReview()">Review changes →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Review diff -->
+    <div id="es-step-2" class="setup-step">
+      <div class="setup-card">
+        <div class="setup-header">
+          <h1>Review changes</h1>
+          <p>Check what's changed before saving. This affects your next cycle only.</p>
+        </div>
+        <div id="es-review-content"></div>
+      </div>
+    </div>
+
+  </div><!-- end #view-edit-setup -->
+
   <!-- ─── Dashboard View ─────────────────────────────────────── -->
   <div id="view-dashboard" class="view">
     <div id="dashboard-content"></div>
@@ -873,9 +1121,53 @@
     </div>
   </div>
 
+  <!-- ─── Settings Panel (slides in from right) ─────────────────── -->
+  <div id="st-overlay" class="st-overlay" onclick="SettingsPanel.handleOverlayClick(event)">
+    <div class="st-panel">
+      <h2>Settings</h2>
+
+      <div class="st-section">
+        <button class="btn btn-secondary" onclick="SettingsPanel.openEditSetup()">Edit setup</button>
+      </div>
+
+      <div class="st-section">
+        <div class="st-section-label">Backup</div>
+        <div id="st-backup-collapsed">
+          <button class="btn btn-secondary" onclick="SettingsPanel.revealBackup()">Copy backup to clipboard</button>
+        </div>
+        <div id="st-backup-expanded" style="display:none">
+          <div class="st-section-hint">Select all and copy this text, then save it somewhere safe (Notes, Google Keep, etc).</div>
+          <textarea class="st-textarea" id="st-backup-textarea" readonly></textarea>
+          <div class="st-copy-status" id="st-copy-status">Copied to clipboard ✓</div>
+        </div>
+      </div>
+
+      <div class="st-section">
+        <button class="st-accordion-toggle" onclick="SettingsPanel.toggleRestore()">
+          <span>Restore from backup</span>
+          <span id="st-restore-chevron">▾</span>
+        </button>
+        <div class="st-accordion-body" id="st-restore-body">
+          <div class="st-section-hint">Paste your saved backup text below.</div>
+          <textarea class="st-textarea" id="st-restore-textarea" placeholder="Paste backup JSON here" oninput="SettingsPanel.validateRestore()"></textarea>
+          <div class="st-error-block" id="st-restore-errors">
+            <div class="st-error-headline" id="st-restore-error-headline"></div>
+            <ul id="st-restore-error-list"></ul>
+          </div>
+          <button class="btn btn-warning" id="st-restore-btn" onclick="SettingsPanel.confirmRestoreStep()" disabled style="margin-top:0.85rem">Restore</button>
+
+          <div class="st-confirm-row" id="st-restore-confirm-row" style="display:none">
+            <span>This will overwrite all current data. Are you sure?</span>
+          </div>
+          <button class="btn btn-danger" id="st-restore-final-btn" onclick="SettingsPanel.doRestore()" style="display:none;margin-top:0.6rem">Yes, restore and overwrite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 5 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 6 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -1398,6 +1690,7 @@
             <span>
               <span class="db-day-count">Day ${cycleState.currentDay} of ${cycleState.totalDays}</span>
               <button class="db-cal-btn" onclick="PayDatePanel.open()" title="Pay dates">📅</button>
+              <button class="db-settings-btn" onclick="SettingsPanel.open()" title="Settings">⚙️</button>
             </span>
           </div>
           <div class="db-cycle-dates">
@@ -1936,6 +2229,412 @@
         if (today > cycleState.cycleEnd) {
           document.getElementById('exp-overlay').classList.add('open');
         }
+      }
+    };
+
+    // ─── Settings Panel (Backup / Restore / Edit Setup entry) ────
+    const SettingsPanel = {
+
+      open() {
+        document.getElementById('st-overlay').classList.add('open');
+
+        document.getElementById('st-backup-collapsed').style.display = 'block';
+        document.getElementById('st-backup-expanded').style.display  = 'none';
+        document.getElementById('st-copy-status').classList.remove('visible');
+
+        document.getElementById('st-restore-body').classList.remove('open');
+        document.getElementById('st-restore-chevron').textContent = '▾';
+        document.getElementById('st-restore-textarea').value = '';
+        document.getElementById('st-restore-errors').classList.remove('visible');
+        document.getElementById('st-restore-btn').disabled = true;
+        document.getElementById('st-restore-btn').style.display = 'block';
+        document.getElementById('st-restore-confirm-row').style.display = 'none';
+        document.getElementById('st-restore-final-btn').style.display = 'none';
+      },
+
+      close() {
+        document.getElementById('st-overlay').classList.remove('open');
+      },
+
+      handleOverlayClick(e) {
+        if (e.target === document.getElementById('st-overlay')) SettingsPanel.close();
+      },
+
+      openEditSetup() {
+        SettingsPanel.close();
+        EditSetup.start();
+      },
+
+      // ── Backup ───────────────────────────────────────────────
+
+      revealBackup() {
+        const data = {
+          burndown_version:    Storage.get('burndown_version'),
+          burndown_setup:      Storage.get('burndown_setup'),
+          burndown_paydays:    Storage.get('burndown_paydays'),
+          burndown_last_check: Storage.get('burndown_last_check')
+        };
+        const json = JSON.stringify(data, null, 2);
+
+        document.getElementById('st-backup-collapsed').style.display = 'none';
+        document.getElementById('st-backup-expanded').style.display  = 'block';
+
+        const ta = document.getElementById('st-backup-textarea');
+        ta.value = json;
+        ta.focus();
+        ta.select();
+
+        // Quietly attempt clipboard write — textarea is the real mechanism either way
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(json)
+            .then(() => document.getElementById('st-copy-status').classList.add('visible'))
+            .catch(() => {});
+        }
+      },
+
+      // ── Restore ──────────────────────────────────────────────
+
+      toggleRestore() {
+        const body    = document.getElementById('st-restore-body');
+        const chevron = document.getElementById('st-restore-chevron');
+        const open    = body.classList.toggle('open');
+        chevron.textContent = open ? '▴' : '▾';
+      },
+
+      // Field-type schema validation. Returns array of human-readable error strings.
+      validateSchema(data) {
+        const errors  = [];
+        const describe = v => {
+          if (v === null) return 'null';
+          if (Array.isArray(v)) return 'array';
+          return `${typeof v} (${JSON.stringify(v)})`;
+        };
+
+        if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+          errors.push('Root: expected an object, found ' + describe(data));
+          return errors;
+        }
+
+        if (typeof data.burndown_version !== 'string') {
+          errors.push(`burndown_version: expected string, found ${describe(data.burndown_version)}`);
+        }
+
+        const setup = data.burndown_setup;
+        if (typeof setup !== 'object' || setup === null || Array.isArray(setup)) {
+          errors.push(`burndown_setup: expected object, found ${describe(setup)}`);
+        } else {
+          if (typeof setup.netPay !== 'number')       errors.push(`burndown_setup.netPay: expected number, found ${describe(setup.netPay)}`);
+          if (typeof setup.billsTransfer !== 'number') errors.push(`burndown_setup.billsTransfer: expected number, found ${describe(setup.billsTransfer)}`);
+          if (typeof setup.targetBuffer !== 'number')  errors.push(`burndown_setup.targetBuffer: expected number, found ${describe(setup.targetBuffer)}`);
+          if (!Array.isArray(setup.bills))             errors.push(`burndown_setup.bills: expected array, found ${describe(setup.bills)}`);
+          if (typeof setup.savedAt !== 'string')       errors.push(`burndown_setup.savedAt: expected string, found ${describe(setup.savedAt)}`);
+        }
+
+        if (!Array.isArray(data.burndown_paydays)) {
+          errors.push(`burndown_paydays: expected array, found ${describe(data.burndown_paydays)}`);
+        }
+
+        const lastCheck = data.burndown_last_check;
+        if (lastCheck !== null && (typeof lastCheck !== 'object' || Array.isArray(lastCheck))) {
+          errors.push(`burndown_last_check: expected object or null, found ${describe(lastCheck)}`);
+        }
+
+        return errors;
+      },
+
+      validateRestore() {
+        const raw      = document.getElementById('st-restore-textarea').value.trim();
+        const errBlock = document.getElementById('st-restore-errors');
+        const headline = document.getElementById('st-restore-error-headline');
+        const list     = document.getElementById('st-restore-error-list');
+        const btn      = document.getElementById('st-restore-btn');
+
+        // Any edit after reaching the confirm step resets back to the validate step
+        document.getElementById('st-restore-confirm-row').style.display = 'none';
+        document.getElementById('st-restore-final-btn').style.display   = 'none';
+        btn.style.display = 'block';
+
+        if (!raw) {
+          errBlock.classList.remove('visible');
+          btn.disabled = true;
+          return;
+        }
+
+        let parsed;
+        try {
+          parsed = JSON.parse(raw);
+        } catch (e) {
+          headline.textContent = 'This looks like a bad copy — try copying the backup again.';
+          list.innerHTML = '<li>Not valid JSON — the text may have been cut off or altered</li>';
+          errBlock.classList.add('visible');
+          btn.disabled = true;
+          return;
+        }
+
+        const errors = SettingsPanel.validateSchema(parsed);
+        if (errors.length === 0) {
+          errBlock.classList.remove('visible');
+          btn.disabled = false;
+          return;
+        }
+
+        headline.textContent = errors.length === 1
+          ? 'This looks like a bad copy — try copying the backup again.'
+          : 'Multiple fields look off — this looks like a pattern (e.g. a find-replace gone wrong). Fix in place below.';
+        list.innerHTML = errors.map(e => `<li>${escHtml(e)}</li>`).join('');
+        errBlock.classList.add('visible');
+        btn.disabled = true;
+      },
+
+      confirmRestoreStep() {
+        document.getElementById('st-restore-confirm-row').style.display = 'flex';
+        document.getElementById('st-restore-final-btn').style.display   = 'block';
+        document.getElementById('st-restore-btn').style.display         = 'none';
+      },
+
+      doRestore() {
+        const raw = document.getElementById('st-restore-textarea').value.trim();
+        let parsed;
+        try { parsed = JSON.parse(raw); } catch (e) { return; }
+        if (SettingsPanel.validateSchema(parsed).length > 0) return;
+
+        Storage.set('burndown_version',    parsed.burndown_version);
+        Storage.set('burndown_setup',      parsed.burndown_setup);
+        Storage.set('burndown_paydays',    parsed.burndown_paydays);
+        Storage.set('burndown_last_check', parsed.burndown_last_check);
+
+        SettingsPanel.close();
+        App.checkSnapshotTrigger();
+        Dashboard.render();
+      }
+    };
+
+    // ─── Edit Setup (reuses Setup-style flow, diffs against original) ──
+    const EditSetup = {
+
+      data: { netPay: null, billsTransfer: null, targetBuffer: null, bills: [] },
+      original: null,
+      pendingDeleteId: null,
+
+      start() {
+        const setup = Storage.get('burndown_setup');
+        if (!setup) return;
+
+        EditSetup.original = JSON.parse(JSON.stringify(setup));
+        EditSetup.data = {
+          netPay:        setup.netPay,
+          billsTransfer: setup.billsTransfer,
+          targetBuffer:  setup.targetBuffer,
+          bills:         JSON.parse(JSON.stringify(setup.bills))
+        };
+
+        document.getElementById('es1-net-pay').value        = setup.netPay;
+        document.getElementById('es1-bills-transfer').value = setup.billsTransfer;
+        document.getElementById('es1-buffer').value          = setup.targetBuffer;
+
+        EditSetup.pendingDeleteId = null;
+        EditSetup.renderBillList();
+        EditSetup.showStep(1);
+        App.showView('edit-setup');
+      },
+
+      showStep(n) {
+        document.querySelectorAll('#view-edit-setup .setup-step').forEach(s => s.classList.remove('active'));
+        document.getElementById(`es-step-${n}`).classList.add('active');
+      },
+
+      cancel() {
+        App.showView('dashboard');
+        Dashboard.render();
+      },
+
+      validateAmount(inputId, errorId, value) {
+        const ok = !isNaN(value) && value > 0;
+        document.getElementById(inputId).classList.toggle('error', !ok);
+        document.getElementById(errorId).classList.toggle('visible', !ok);
+        return ok;
+      },
+
+      addBill() {
+        const nameVal   = document.getElementById('es2-name').value.trim();
+        const amountVal = parseNum(document.getElementById('es2-amount').value);
+        const dayVal    = parseInt(document.getElementById('es2-day').value, 10);
+
+        const nameOk   = nameVal.length > 0;
+        const amountOk = EditSetup.validateAmount('es2-amount', 'es2-err-amount', amountVal);
+        const dayOk    = !isNaN(dayVal) && dayVal >= 1 && dayVal <= 31;
+
+        document.getElementById('es2-name').classList.toggle('error', !nameOk);
+        document.getElementById('es2-err-name').classList.toggle('visible', !nameOk);
+        document.getElementById('es2-day').classList.toggle('error', !dayOk);
+        document.getElementById('es2-err-day').classList.toggle('visible', !dayOk);
+
+        if (!nameOk || !amountOk || !dayOk) return;
+
+        EditSetup.data.bills.push({ id: makeId(), name: nameVal, amount: amountVal, dayOfMonth: dayVal });
+
+        document.getElementById('es2-name').value   = '';
+        document.getElementById('es2-amount').value = '';
+        document.getElementById('es2-day').value    = '';
+        document.getElementById('es2-name').focus();
+
+        EditSetup.pendingDeleteId = null;
+        EditSetup.renderBillList();
+      },
+
+      renderBillList() {
+        const container = document.getElementById('es-bill-list');
+        const empty     = document.getElementById('es-bill-list-empty');
+
+        container.querySelectorAll('.bill-item').forEach(el => el.remove());
+
+        if (EditSetup.data.bills.length === 0) {
+          empty.style.display = 'block';
+          return;
+        }
+        empty.style.display = 'none';
+
+        EditSetup.data.bills.forEach(bill => {
+          const shortNote = bill.dayOfMonth >= 29
+            ? `<div class="bill-item-short-month">⚠ Falls on 1st of the following month in short months</div>`
+            : '';
+          const isPending = EditSetup.pendingDeleteId === bill.id;
+          const deleteBtn = !isPending
+            ? `<button class="btn-delete" onclick="EditSetup.requestDelete('${bill.id}')">Delete</button>`
+            : '';
+          const confirmRow = isPending ? `
+            <div class="bill-confirm-row">
+              <span>Delete ${escHtml(bill.name)}?</span>
+              <button class="btn btn-secondary btn-sm" onclick="EditSetup.cancelDelete()">Cancel</button>
+              <button class="btn btn-danger btn-sm" onclick="EditSetup.confirmDelete('${bill.id}')">Delete</button>
+            </div>` : '';
+
+          const item = document.createElement('div');
+          item.className = 'bill-item';
+          item.id        = `es-bill-${bill.id}`;
+          item.innerHTML = `
+            <div class="bill-item-row">
+              <div>
+                <div class="bill-item-name">${escHtml(bill.name)}</div>
+                <div class="bill-item-detail">${formatGBP(bill.amount)} · Day ${bill.dayOfMonth}</div>
+                ${shortNote}
+              </div>
+              ${deleteBtn}
+            </div>
+            ${confirmRow}`;
+          container.appendChild(item);
+        });
+      },
+
+      requestDelete(id) { EditSetup.pendingDeleteId = id; EditSetup.renderBillList(); },
+      cancelDelete()     { EditSetup.pendingDeleteId = null; EditSetup.renderBillList(); },
+
+      confirmDelete(id) {
+        EditSetup.data.bills      = EditSetup.data.bills.filter(b => b.id !== id);
+        EditSetup.pendingDeleteId = null;
+        EditSetup.renderBillList();
+      },
+
+      showReview() {
+        const netPayVal = parseNum(document.getElementById('es1-net-pay').value);
+        const billsVal  = parseNum(document.getElementById('es1-bills-transfer').value);
+        const bufferVal = parseNum(document.getElementById('es1-buffer').value);
+
+        const netOk    = EditSetup.validateAmount('es1-net-pay', 'es1-err-net-pay', netPayVal);
+        const billsOk  = EditSetup.validateAmount('es1-bills-transfer', 'es1-err-bills-transfer', billsVal);
+        const bufferOk = EditSetup.validateAmount('es1-buffer', 'es1-err-buffer', bufferVal);
+        if (!netOk || !billsOk || !bufferOk) return;
+
+        EditSetup.data.netPay        = netPayVal;
+        EditSetup.data.billsTransfer = billsVal;
+        EditSetup.data.targetBuffer  = bufferVal;
+
+        const orig = EditSetup.original;
+        const origBillsById = {};
+        orig.bills.forEach(b => { origBillsById[b.id] = b; });
+        const newBillsById = {};
+        EditSetup.data.bills.forEach(b => { newBillsById[b.id] = b; });
+
+        const added   = EditSetup.data.bills.filter(b => !origBillsById[b.id]);
+        const removed = orig.bills.filter(b => !newBillsById[b.id]);
+        const edited  = EditSetup.data.bills.filter(b => {
+          const o = origBillsById[b.id];
+          return o && (o.name !== b.name || o.amount !== b.amount || o.dayOfMonth !== b.dayOfMonth);
+        });
+
+        const payChanged      = orig.netPay        !== EditSetup.data.netPay;
+        const transferChanged = orig.billsTransfer  !== EditSetup.data.billsTransfer;
+        const bufferChanged   = orig.targetBuffer   !== EditSetup.data.targetBuffer;
+
+        let html = '';
+
+        html += `<div class="diff-group"><div class="diff-group-label">Pay &amp; transfers</div>`;
+        if (payChanged) {
+          html += `<div class="diff-row edited"><span class="diff-from">${formatGBP(orig.netPay)}</span>→ ${formatGBP(EditSetup.data.netPay)} <span style="color:#888">(net pay)</span></div>`;
+        }
+        if (transferChanged) {
+          html += `<div class="diff-row edited"><span class="diff-from">${formatGBP(orig.billsTransfer)}</span>→ ${formatGBP(EditSetup.data.billsTransfer)} <span style="color:#888">(bills deposit)</span></div>`;
+        }
+        if (bufferChanged) {
+          html += `<div class="diff-row edited"><span class="diff-from">${formatGBP(orig.targetBuffer)}</span>→ ${formatGBP(EditSetup.data.targetBuffer)} <span style="color:#888">(target buffer)</span></div>`;
+        }
+        if (!payChanged && !transferChanged && !bufferChanged) html += `<div class="diff-none">No changes</div>`;
+        html += `</div>`;
+
+        html += `<div class="diff-group"><div class="diff-group-label">Bills added</div>`;
+        html += added.length
+          ? added.map(b => `<div class="diff-row added">+ ${escHtml(b.name)} — ${formatGBP(b.amount)} (day ${b.dayOfMonth})</div>`).join('')
+          : `<div class="diff-none">None</div>`;
+        html += `</div>`;
+
+        html += `<div class="diff-group"><div class="diff-group-label">Bills removed</div>`;
+        html += removed.length
+          ? removed.map(b => `<div class="diff-row removed">− ${escHtml(b.name)} — ${formatGBP(b.amount)} (day ${b.dayOfMonth})</div>`).join('')
+          : `<div class="diff-none">None</div>`;
+        html += `</div>`;
+
+        html += `<div class="diff-group"><div class="diff-group-label">Bills edited</div>`;
+        html += edited.length
+          ? edited.map(b => {
+              const o = origBillsById[b.id];
+              return `<div class="diff-row edited">${escHtml(b.name)}: <span class="diff-from">${formatGBP(o.amount)} / day ${o.dayOfMonth}</span>→ ${formatGBP(b.amount)} / day ${b.dayOfMonth}</div>`;
+            }).join('')
+          : `<div class="diff-none">None</div>`;
+        html += `</div>`;
+
+        const newStart   = EditSetup.data.netPay - EditSetup.data.billsTransfer;
+        const totalBills = EditSetup.data.bills.reduce((s, b) => s + b.amount, 0);
+        const newEnd     = newStart - totalBills;
+        const endGap     = newEnd - EditSetup.data.targetBuffer;
+
+        html += `<div class="diff-group"><div class="diff-group-label">Updated next-cycle projection</div>
+          <div class="review-row"><span class="lbl">Starting balance</span><span class="val">${formatGBP(newStart)}</span></div>
+          <div class="review-row total ${endGap >= 0 ? 'positive' : 'negative'}">
+            <span class="lbl">Projected surplus / deficit</span>
+            <span class="val">${endGap >= 0 ? '+' : '−'}${formatGBP(Math.abs(endGap))}</span>
+          </div>
+        </div>`;
+
+        html += `
+          <div class="setup-nav">
+            <button class="btn btn-back" onclick="EditSetup.showStep(1)">← Back</button>
+            <button class="btn btn-primary" onclick="EditSetup.save()">Save changes</button>
+          </div>`;
+
+        document.getElementById('es-review-content').innerHTML = html;
+        EditSetup.showStep(2);
+      },
+
+      save() {
+        Storage.set('burndown_setup', {
+          netPay:        EditSetup.data.netPay,
+          billsTransfer: EditSetup.data.billsTransfer,
+          targetBuffer:  EditSetup.data.targetBuffer,
+          bills:         EditSetup.data.bills,
+          savedAt:       new Date().toISOString()
+        });
+        App.showView('dashboard');
+        Dashboard.render();
       }
     };
 
