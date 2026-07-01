@@ -2415,6 +2415,7 @@
       data: { netPay: null, billsTransfer: null, targetBuffer: null, bills: [] },
       original: null,
       pendingDeleteId: null,
+      pendingEditId: null,
 
       start() {
         const setup = Storage.get('burndown_setup');
@@ -2433,6 +2434,7 @@
         document.getElementById('es1-buffer').value          = setup.targetBuffer;
 
         EditSetup.pendingDeleteId = null;
+        EditSetup.pendingEditId   = null;
         EditSetup.renderBillList();
         EditSetup.showStep(1);
         App.showView('edit-setup');
@@ -2495,18 +2497,48 @@
         empty.style.display = 'none';
 
         EditSetup.data.bills.forEach(bill => {
-          const shortNote = bill.dayOfMonth >= 29
+          const shortNote  = bill.dayOfMonth >= 29
             ? `<div class="bill-item-short-month">⚠ Falls on 1st of the following month in short months</div>`
             : '';
-          const isPending = EditSetup.pendingDeleteId === bill.id;
-          const deleteBtn = !isPending
-            ? `<button class="btn-delete" onclick="EditSetup.requestDelete('${bill.id}')">Delete</button>`
+          const isPendingDelete = EditSetup.pendingDeleteId === bill.id;
+          const isPendingEdit   = EditSetup.pendingEditId   === bill.id;
+
+          // Action buttons — hidden when any pending action is active on this row
+          const actionBtns = (!isPendingDelete && !isPendingEdit)
+            ? `<div style="display:flex;gap:0.4rem;flex-shrink:0;margin-left:0.75rem">
+                 <button class="btn-delete" onclick="EditSetup.requestEdit('${bill.id}')">Edit</button>
+                 <button class="btn-delete" onclick="EditSetup.requestDelete('${bill.id}')">Delete</button>
+               </div>`
             : '';
-          const confirmRow = isPending ? `
+
+          const deleteConfirmRow = isPendingDelete ? `
             <div class="bill-confirm-row">
               <span>Delete ${escHtml(bill.name)}?</span>
               <button class="btn btn-secondary btn-sm" onclick="EditSetup.cancelDelete()">Cancel</button>
               <button class="btn btn-danger btn-sm" onclick="EditSetup.confirmDelete('${bill.id}')">Delete</button>
+            </div>` : '';
+
+          const editFormRow = isPendingEdit ? `
+            <div class="bill-confirm-row" style="flex-direction:column;align-items:stretch;gap:0.6rem">
+              <div class="field" style="margin-bottom:0">
+                <label>Bill name</label>
+                <input id="es-edit-name-${bill.id}" type="text" value="${escHtml(bill.name)}" autocomplete="off" />
+                <div id="es-edit-err-name-${bill.id}" class="field-error">Enter a bill name</div>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Amount (£)</label>
+                <input id="es-edit-amount-${bill.id}" type="text" inputmode="decimal" value="${bill.amount}" />
+                <div id="es-edit-err-amount-${bill.id}" class="field-error">Enter a valid amount greater than zero</div>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Day of month</label>
+                <input id="es-edit-day-${bill.id}" type="number" min="1" max="31" value="${bill.dayOfMonth}" />
+                <div id="es-edit-err-day-${bill.id}" class="field-error">Enter a day between 1 and 31</div>
+              </div>
+              <div style="display:flex;gap:0.5rem">
+                <button class="btn btn-secondary btn-sm" onclick="EditSetup.cancelEdit()">Cancel</button>
+                <button class="btn btn-primary btn-sm" style="flex:1" onclick="EditSetup.saveEdit('${bill.id}')">Save</button>
+              </div>
             </div>` : '';
 
           const item = document.createElement('div');
@@ -2519,19 +2551,48 @@
                 <div class="bill-item-detail">${formatGBP(bill.amount)} · Day ${bill.dayOfMonth}</div>
                 ${shortNote}
               </div>
-              ${deleteBtn}
+              ${actionBtns}
             </div>
-            ${confirmRow}`;
+            ${deleteConfirmRow}
+            ${editFormRow}`;
           container.appendChild(item);
         });
       },
 
-      requestDelete(id) { EditSetup.pendingDeleteId = id; EditSetup.renderBillList(); },
+      requestDelete(id) { EditSetup.pendingDeleteId = id; EditSetup.pendingEditId = null; EditSetup.renderBillList(); },
       cancelDelete()     { EditSetup.pendingDeleteId = null; EditSetup.renderBillList(); },
 
       confirmDelete(id) {
         EditSetup.data.bills      = EditSetup.data.bills.filter(b => b.id !== id);
         EditSetup.pendingDeleteId = null;
+        EditSetup.renderBillList();
+      },
+
+      requestEdit(id) { EditSetup.pendingEditId = id; EditSetup.pendingDeleteId = null; EditSetup.renderBillList(); },
+      cancelEdit()    { EditSetup.pendingEditId = null; EditSetup.renderBillList(); },
+
+      saveEdit(id) {
+        const nameVal   = document.getElementById(`es-edit-name-${id}`).value.trim();
+        const amountVal = parseNum(document.getElementById(`es-edit-amount-${id}`).value);
+        const dayVal    = parseInt(document.getElementById(`es-edit-day-${id}`).value, 10);
+
+        const nameOk   = nameVal.length > 0;
+        const amountOk = !isNaN(amountVal) && amountVal > 0;
+        const dayOk    = !isNaN(dayVal) && dayVal >= 1 && dayVal <= 31;
+
+        document.getElementById(`es-edit-name-${id}`).classList.toggle('error', !nameOk);
+        document.getElementById(`es-edit-err-name-${id}`).classList.toggle('visible', !nameOk);
+        document.getElementById(`es-edit-amount-${id}`).classList.toggle('error', !amountOk);
+        document.getElementById(`es-edit-err-amount-${id}`).classList.toggle('visible', !amountOk);
+        document.getElementById(`es-edit-day-${id}`).classList.toggle('error', !dayOk);
+        document.getElementById(`es-edit-err-day-${id}`).classList.toggle('visible', !dayOk);
+
+        if (!nameOk || !amountOk || !dayOk) return;
+
+        const bill = EditSetup.data.bills.find(b => b.id === id);
+        if (bill) { bill.name = nameVal; bill.amount = amountVal; bill.dayOfMonth = dayVal; }
+
+        EditSetup.pendingEditId = null;
         EditSetup.renderBillList();
       },
 
