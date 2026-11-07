@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#0f1117" />
   <title>Moneybox</title>
   <link rel="manifest" href="/Moneybox/manifest.json" />
   <style>
     /* ─── Reset & Base ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Dark colour scheme: makes native date pickers dark and the calendar icon visible */
+    :root { color-scheme: dark; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -425,8 +428,10 @@
       background: #1a1d27;
       border-top: 1px solid #2a2d3a;
       border-radius: 16px 16px 0 0;
-      padding: 1.5rem 1.25rem 2.5rem;
+      padding: 1.5rem 1.25rem calc(2.5rem + env(safe-area-inset-bottom));
       max-width: 480px;
+      max-height: 100%;
+      overflow-y: auto;
       margin: 0 auto;
       z-index: 201;
       transform: translateY(100%);
@@ -471,6 +476,12 @@
       min-height: 44px;
       outline: none;
       -webkit-appearance: none;
+    }
+
+    .pd-row input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      opacity: 0.7;
+      cursor: pointer;
     }
 
     .pd-row input[type="date"]:focus { border-color: #3b82f6; }
@@ -2863,6 +2874,16 @@
     window.addEventListener('error', e => {
       const el = document.getElementById('debug-error');
       if (el) el.textContent = `JS Error: ${e.message} (line ${e.lineno})`;
+    });
+
+    // Tapping any date field opens the native date picker directly.
+    // Chrome on Android tablets renders date inputs desktop-style (dd/mm/yyyy segments)
+    // which don't reliably raise the on-screen keyboard — the picker always works.
+    document.addEventListener('click', (e) => {
+      const el = e.target;
+      if (el instanceof HTMLInputElement && el.type === 'date' && !el.disabled && typeof el.showPicker === 'function') {
+        try { el.showPicker(); } catch (err) { /* fall back to default behaviour */ }
+      }
     });
 
     document.addEventListener('DOMContentLoaded', () => {
