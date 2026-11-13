@@ -1,7 +1,7 @@
 'use strict';
 
 // Bump on every deploy so the new service worker installs and old caches are cleared.
-const CACHE_NAME = 'moneybox-v3.13';
+const CACHE_NAME = 'moneybox-v3.14';
 const ASSETS = [
   '/Moneybox/',
   '/Moneybox/index.html',

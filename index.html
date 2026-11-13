@@ -1200,7 +1200,7 @@
 
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 7c · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 8 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -1224,12 +1224,18 @@
       remove(key) {
         try { localStorage.removeItem(key); } catch (e) {}
       },
-      clear() {
+      // All burndown_* keys (except the version and the safety copy), parsed.
+      // There is deliberately no "clear all" — nothing in the app wipes data.
+      readAllData() {
+        const data = {};
         try {
           Object.keys(localStorage)
-            .filter(k => k.startsWith('burndown_'))
-            .forEach(k => localStorage.removeItem(k));
+            .filter(k => k.startsWith('burndown_')
+                      && k !== 'burndown_version'
+                      && k !== Versioning.SAFETY_KEY)
+            .forEach(k => { data[k] = Storage.get(k); });
         } catch (e) {}
+        return data;
       }
     };
 
@@ -1479,16 +1485,94 @@
       }
     };
 
-    // ─── Version Check ───────────────────────────────────────────
-    function checkVersion() {
-      const stored = Storage.get('burndown_version');
-      if (stored !== APP_VERSION) {
-        Storage.clear();
-        Storage.set('burndown_version', APP_VERSION);
-        return false;
+    // ─── Versioning (Stage 8) ────────────────────────────────────
+    // Saved data is NEVER wiped because of a version mismatch.
+    //
+    // To change the saved data format in future:
+    //   1. Bump APP_VERSION (e.g. '2.0' → '2.1')
+    //   2. Add a step to MIGRATIONS: { from: '2.0', to: '2.1', run(data) { ... } }
+    //      `data` is { burndown_setup, burndown_paydays, ... } — change it in place.
+    //   3. Add a harness scenario for the step.
+    // Before any upgrade runs, a safety copy of the old data is kept under SAFETY_KEY.
+    const MIGRATIONS = [
+      // none yet — 2.0 is the only data format so far
+    ];
+
+    const Versioning = {
+
+      SAFETY_KEY: 'burndown_safety_copy',
+
+      // Pure: decides what to do. Returns { action, steps }.
+      //   'fresh'   — no version and no data: first ever run
+      //   'ok'      — versions match
+      //   'upgrade' — a chain of steps leads from stored to current
+      //   'unknown' — no route (newer, typo, or data without a version): leave alone
+      plan(stored, current, migrations, hasData) {
+        if (stored === null || stored === undefined) {
+          return { action: hasData ? 'unknown' : 'fresh', steps: [] };
+        }
+        if (stored === current) return { action: 'ok', steps: [] };
+
+        const steps = [];
+        let v = stored;
+        while (v !== current) {
+          const step = migrations.find(m => m.from === v);
+          if (!step || steps.length >= 50) return { action: 'unknown', steps: [] };
+          steps.push(step);
+          v = step.to;
+        }
+        return { action: 'upgrade', steps };
+      },
+
+      // Pure: returns an upgraded deep copy; the input is not modified.
+      applySteps(data, steps) {
+        const copy = JSON.parse(JSON.stringify(data));
+        steps.forEach(step => step.run(copy));
+        return copy;
+      },
+
+      // True if this version can be loaded by this app (used by restore).
+      isLoadable(version, current, migrations) {
+        const a = Versioning.plan(version, current, migrations, true).action;
+        return a === 'ok' || a === 'upgrade';
+      },
+
+      // Storage-touching: runs on every load and after a restore.
+      // Returns { action, from } for the debug bar.
+      run() {
+        const stored  = Storage.get('burndown_version');
+        const data    = Storage.readAllData();
+        const hasData = Object.values(data).some(v => v !== null);
+        const { action, steps } = Versioning.plan(stored, APP_VERSION, MIGRATIONS, hasData);
+
+        if (action === 'fresh') {
+          Storage.set('burndown_version', APP_VERSION);
+        }
+
+        if (action === 'upgrade') {
+          // Safety copy first — if a step throws, nothing has been overwritten
+          Storage.set(Versioning.SAFETY_KEY, {
+            version: stored, savedAt: new Date().toISOString(), data
+          });
+          const upgraded = Versioning.applySteps(data, steps);
+          Object.keys(upgraded).forEach(k => Storage.set(k, upgraded[k]));
+          Storage.set('burndown_version', APP_VERSION);
+        }
+
+        // 'ok' and 'unknown' change nothing
+        return { action, from: stored };
+      },
+
+      // Text for the debug bar
+      label(result) {
+        switch (result.action) {
+          case 'ok':      return `${APP_VERSION} ✓`;
+          case 'fresh':   return `new → ${APP_VERSION}`;
+          case 'upgrade': return `${result.from} → ${APP_VERSION} ✓ (upgraded)`;
+          default:        return `⚠ data version ${result.from ?? 'missing'} not recognised — nothing changed`;
+        }
       }
-      return true;
-    }
+    };
 
     // ─── Setup Namespace ─────────────────────────────────────────
     const Setup = {
@@ -2240,9 +2324,8 @@
       },
 
       init() {
-        const versionOk = checkVersion();
-        document.getElementById('debug-version').textContent =
-          versionOk ? `${APP_VERSION} ✓` : `wiped → ${APP_VERSION}`;
+        const versionResult = Versioning.run();
+        document.getElementById('debug-version').textContent = Versioning.label(versionResult);
 
         if (window.location.search.includes('test')) {
           App.showView('test');
@@ -2532,6 +2615,8 @@
 
         if (typeof data.burndown_version !== 'string') {
           errors.push(`burndown_version: expected string, found ${describe(data.burndown_version)}`);
+        } else if (!Versioning.isLoadable(data.burndown_version, APP_VERSION, MIGRATIONS)) {
+          errors.push(`burndown_version: this backup is version ${data.burndown_version}, which this app (${APP_VERSION}) can't load`);
         }
 
         const setup = data.burndown_setup;
@@ -2623,6 +2708,9 @@
         Storage.set('burndown_paydays',    parsed.burndown_paydays);
         Storage.set('burndown_last_check', parsed.burndown_last_check);
         CheckinHistory.save(Array.isArray(parsed.burndown_checkins) ? parsed.burndown_checkins : []);
+
+        // An older backup is upgraded here, straight away — never wiped
+        document.getElementById('debug-version').textContent = Versioning.label(Versioning.run());
         CheckinHistory.syncFromLastCheck();
 
         SettingsPanel.close();
@@ -3176,6 +3264,46 @@
             TestHarness.assertEq('label format',  ChartScale.formatTick(3750), '£3,750')
           ];
           results.push({ scenario: 'S14: Y axis from £0 in £250 / £1,000 steps', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Stage 8: versioning never wipes data (pure — fake migrations, no storage) ──
+        {
+          const fake = [
+            { from: '2.0', to: '2.1', run(d) { d.burndown_setup.tag = 'a'; } },
+            { from: '2.1', to: '2.2', run(d) { d.burndown_setup.tag += 'b'; } }
+          ];
+          const P = (stored, hasData) => Versioning.plan(stored, '2.2', fake, hasData);
+          const before = { burndown_setup: { netPay: 2400 } };
+          const after  = Versioning.applySteps(before, P('2.0', true).steps);
+          const checks = [
+            TestHarness.assertEq('same version → ok',          P('2.2', true).action, 'ok'),
+            TestHarness.assertEq('no version, no data → fresh', P(null, false).action, 'fresh'),
+            TestHarness.assertEq('no version but data → unknown', P(null, true).action, 'unknown'),
+            TestHarness.assertEq('older → upgrade',            P('2.0', true).action, 'upgrade'),
+            TestHarness.assert('older → step count',           P('2.0', true).steps.length, 2),
+            TestHarness.assertEq('newer → unknown',            P('3.0', true).action, 'unknown'),
+            TestHarness.assertEq('steps run in order',         after.burndown_setup.tag, 'ab'),
+            TestHarness.assert('data kept through upgrade',    after.burndown_setup.netPay, 2400),
+            TestHarness.assertEq('input not modified',         before.burndown_setup.tag, undefined)
+          ];
+          results.push({ scenario: 'S15: Version mismatch upgrades or leaves data alone — never wipes', pass: checks.every(c => c.pass), checks });
+        }
+
+        // S16: Restore — current version accepted, unknown version rejected
+        {
+          const base = {
+            burndown_version: APP_VERSION,
+            burndown_setup: { netPay: 2400, billsTransfer: 600, targetBuffer: 150, bills: [], savedAt: 'x' },
+            burndown_paydays: [],
+            burndown_last_check: null
+          };
+          const checks = [
+            TestHarness.assert('current version errors', SettingsPanel.validateSchema(base).length, 0),
+            TestHarness.assert('unknown version errors',
+              SettingsPanel.validateSchema({ ...base, burndown_version: '1.0' }).length, 1,
+              'no route from 1.0 → rejected before anything is overwritten')
+          ];
+          results.push({ scenario: 'S16: Restore rejects versions it can\'t load', pass: checks.every(c => c.pass), checks });
         }
 
         TestHarness.render(results);
