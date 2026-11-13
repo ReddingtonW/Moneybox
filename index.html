@@ -883,6 +883,28 @@
     }
 
     #debug-error { color: #ef4444; margin-top: 2px; min-height: 1em; }
+
+    /* ─── Tablet (≥700px) — larger text, wider column, bigger controls ───
+       Everything above is sized in rem, so raising the root size scales
+       text, padding and inputs together. Phone layout is unaffected. */
+    @media (min-width: 700px) {
+      html { font-size: 20px; }
+      body { padding: 0 1.5rem 5rem; }
+      .view { max-width: 880px; }
+
+      .db-cal-btn,
+      .db-settings-btn {
+        min-width: 2.75rem;
+        min-height: 2.75rem;
+        font-size: 1.5rem;
+        border-radius: 8px;
+      }
+
+      #view-dashboard .db-app-bar { align-items: center; }
+      #view-dashboard .db-app-title { font-size: 1.2rem; }
+      #view-dashboard .db-day-count { font-size: 0.85rem; }
+      #view-dashboard .db-cycle-dates { font-size: 0.85rem; }
+    }
   </style>
 </head>
 <body>
@@ -1178,7 +1200,7 @@
 
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 7a · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 7b · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -1772,8 +1794,8 @@
             <span class="db-app-title">MONEYBOX</span>
             <span>
               <span class="db-day-count">Day ${cycleState.currentDay} of ${cycleState.totalDays}</span>
-              <button class="db-cal-btn" onclick="PayDatePanel.open()" title="Pay dates">📅</button>
-              <button class="db-settings-btn" onclick="SettingsPanel.open()" title="Settings">⚙️</button>
+              <button class="db-cal-btn" onclick="PayDatePanel.open()" title="Pay dates" aria-label="Pay dates">📅</button>
+              <button class="db-settings-btn" onclick="SettingsPanel.open()" title="Settings" aria-label="Settings">⚙️</button>
             </span>
           </div>
           <div class="db-cycle-dates">
@@ -1937,9 +1959,19 @@
         const canvas = document.getElementById('burndown-canvas');
         if (!canvas || series.length === 0) return;
 
+        // Remember inputs so the chart can be redrawn on resize/rotation
+        Dashboard.lastChartArgs = [series, targetBuffer, today, checkins];
+
+        // Tablet: taller chart, larger text and dots. Phone keeps the original sizes.
+        const tablet = window.matchMedia('(min-width: 700px)').matches;
+        const S      = tablet ? 1.35 : 1;    // scale for text, dots and padding
+        const font   = px => `${Math.round(px * S)}px -apple-system, sans-serif`;
+
         const dpr  = window.devicePixelRatio || 1;
-        const W    = canvas.parentElement.clientWidth - 40; // account for card padding
-        const H    = 180;
+        const cs   = getComputedStyle(canvas.parentElement);
+        const W    = canvas.parentElement.clientWidth
+                   - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const H    = tablet ? 340 : 180;
 
         canvas.width        = W * dpr;
         canvas.height       = H * dpr;
@@ -1950,7 +1982,7 @@
         ctx.scale(dpr, dpr);
 
         // Padding inside the canvas
-        const PAD = { top: 10, right: 12, bottom: 36, left: 52 };
+        const PAD = { top: 10 * S, right: 12 * S, bottom: 36 * S, left: 52 * S };
         const plotW = W - PAD.left - PAD.right;
         const plotH = H - PAD.top  - PAD.bottom;
 
@@ -1999,7 +2031,7 @@
 
         // "Buffer" label on the line
         ctx.fillStyle  = '#374151';
-        ctx.font       = `${10 * 1}px -apple-system, sans-serif`;
+        ctx.font       = font(10);
         ctx.textAlign  = 'right';
         ctx.fillText('Buffer', PAD.left - 4, bufY + 3);
 
@@ -2053,7 +2085,7 @@
         ctx.fillStyle = '#6b7280';
         points.slice(0, -1).forEach(p => {
           ctx.beginPath();
-          ctx.arc(xOf(p.idx), yOf(p.c.balance), 3.5, 0, Math.PI * 2);
+          ctx.arc(xOf(p.idx), yOf(p.c.balance), 3.5 * S, 0, Math.PI * 2);
           ctx.fill();
         });
 
@@ -2072,19 +2104,19 @@
           ctx.strokeStyle = dotColor;
           ctx.lineWidth   = 2;
           ctx.beginPath();
-          ctx.arc(dx, dy, 7, 0, Math.PI * 2);
+          ctx.arc(dx, dy, 7 * S, 0, Math.PI * 2);
           ctx.stroke();
 
           // Inner fill
           ctx.fillStyle = dotColor;
           ctx.beginPath();
-          ctx.arc(dx, dy, 4, 0, Math.PI * 2);
+          ctx.arc(dx, dy, 4 * S, 0, Math.PI * 2);
           ctx.fill();
         }
 
         // Y axis labels
         ctx.fillStyle = '#555';
-        ctx.font      = '10px -apple-system, sans-serif';
+        ctx.font      = font(10);
         ctx.textAlign = 'right';
         for (let g = 0; g <= gridCount; g++) {
           const v = yMin + (yRange * g / gridCount);
@@ -2093,26 +2125,44 @@
         }
 
         // X axis labels — show ~5 evenly spaced dates
-        ctx.textAlign = 'center';
+        // The last date is always shown; if the previous evenly spaced label
+        // would collide with it, that label is dropped instead of overlapping.
         ctx.fillStyle = '#555';
-        const step = Math.max(1, Math.floor(n / 5));
-        const shownX = new Set();
+        const labelY = H - PAD.bottom + 14 * S;
+        const minGap = ctx.measureText('28 Nov').width + 10 * S;
+        const step   = Math.max(1, Math.floor(n / 5));
 
-        for (let i = 0; i < n; i += step) {
-          const x = Math.round(xOf(i));
-          if (!shownX.has(x)) {
-            shownX.add(x);
-            ctx.fillText(formatShortDate(series[i].date), x, H - PAD.bottom + 14);
-          }
+        const idxs = [];
+        for (let i = 0; i < n; i += step) idxs.push(i);
+        if (idxs[idxs.length - 1] !== n - 1) {
+          if (idxs.length > 1 && xOf(n - 1) - xOf(idxs[idxs.length - 1]) < minGap) idxs.pop();
+          idxs.push(n - 1);
         }
 
-        // Always show last date
-        const lastX = Math.round(xOf(n - 1));
-        if (!shownX.has(lastX)) {
-          ctx.fillText(formatShortDate(series[n - 1].date), lastX, H - PAD.bottom + 14);
+        idxs.forEach(i => {
+          // Last label is right-aligned so it isn't clipped at the canvas edge
+          const isLast = i === n - 1 && n > 1;
+          ctx.textAlign = isLast ? 'right' : 'center';
+          ctx.fillText(formatShortDate(series[i].date), isLast ? W - 2 : xOf(i), labelY);
+        });
+      },
+
+      lastChartArgs: null,
+
+      // Redraws the chart only (not the whole dashboard, so a half-typed
+      // balance isn't lost) when the screen is resized or rotated.
+      redrawChart() {
+        if (Dashboard.lastChartArgs && document.getElementById('burndown-canvas')) {
+          Dashboard.drawChart(...Dashboard.lastChartArgs);
         }
       }
     };
+
+    let chartResizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(chartResizeTimer);
+      chartResizeTimer = setTimeout(Dashboard.redrawChart, 150);
+    });
 
     // ─── App Controller ──────────────────────────────────────────
     const App = {
