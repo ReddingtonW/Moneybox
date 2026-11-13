@@ -1178,7 +1178,7 @@
 
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 6 · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 7a · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -1357,6 +1357,79 @@
         }
 
         return series;
+      }
+    };
+
+    // ─── Check-in History ────────────────────────────────────────
+    // Stored under 'burndown_checkins' as [{ date, balance, status, savedAt }].
+    // Kept across all cycles; only the current cycle is plotted.
+    // The pure helpers (upsert, forCycle, withLastCheck, bestFit) never touch
+    // storage, so the test harness can exercise them without affecting real data.
+    const CheckinHistory = {
+
+      KEY: 'burndown_checkins',
+
+      load() {
+        const v = Storage.get(CheckinHistory.KEY);
+        return Array.isArray(v) ? v : [];
+      },
+
+      save(list) {
+        Storage.set(CheckinHistory.KEY, list);
+      },
+
+      // Returns a new list with entry added, replacing any existing entry for the same date.
+      upsert(list, entry) {
+        const next = list.filter(c => c.date !== entry.date);
+        next.push(entry);
+        next.sort((a, b) => a.date.localeCompare(b.date));
+        return next;
+      },
+
+      // Check-ins whose date falls inside the cycle (inclusive), oldest first.
+      forCycle(list, cycleStart, cycleEnd) {
+        return list
+          .filter(c => c.date >= cycleStart && c.date <= cycleEnd)
+          .sort((a, b) => a.date.localeCompare(b.date));
+      },
+
+      // Returns a new list that includes the stored last check-in, if it isn't already there.
+      // Used to carry the pre-Stage-7 check-in into history, and after a restore.
+      withLastCheck(list, lastCheck) {
+        if (!lastCheck || typeof lastCheck.date !== 'string' || typeof lastCheck.balance !== 'number') return list;
+        if (list.some(c => c.date === lastCheck.date)) return list;
+        return CheckinHistory.upsert(list, {
+          date:    lastCheck.date,
+          balance: lastCheck.balance,
+          status:  lastCheck.result ? lastCheck.result.status : null,
+          savedAt: lastCheck.savedAt || null
+        });
+      },
+
+      // Least-squares line through points [{ x, y }].
+      // Returns { slope, intercept } or null if fewer than 3 points or no spread in x.
+      bestFit(points) {
+        if (points.length < 3) return null;
+        const n    = points.length;
+        const sumX = points.reduce((s, p) => s + p.x, 0);
+        const sumY = points.reduce((s, p) => s + p.y, 0);
+        const meanX = sumX / n;
+        const meanY = sumY / n;
+        let num = 0, den = 0;
+        points.forEach(p => {
+          num += (p.x - meanX) * (p.y - meanY);
+          den += (p.x - meanX) * (p.x - meanX);
+        });
+        if (den === 0) return null;
+        const slope = num / den;
+        return { slope, intercept: meanY - slope * meanX };
+      },
+
+      // Storage-touching wrapper: make sure the last check-in is in stored history.
+      syncFromLastCheck() {
+        const before = CheckinHistory.load();
+        const after  = CheckinHistory.withLastCheck(before, Storage.get('burndown_last_check'));
+        if (after !== before) CheckinHistory.save(after);
       }
     };
 
@@ -1684,10 +1757,9 @@
             Dashboard.buildUpcomingBills(setup, cycleState, today);
 
           // Draw chart after DOM is ready
-          const series = Engine.getBurndownSeries(setup, cycleState.snapshot, cycleState.cycleStart, cycleState.cycleEnd);
-          const liveBalance = isCheckedToday ? lastCheck.balance : null;
-          const status      = isCheckedToday ? lastCheck.result.status : null;
-          Dashboard.drawChart(series, setup.targetBuffer, today, liveBalance, status);
+          const series   = Engine.getBurndownSeries(setup, cycleState.snapshot, cycleState.cycleStart, cycleState.cycleEnd);
+          const checkins = CheckinHistory.forCycle(CheckinHistory.load(), cycleState.cycleStart, cycleState.cycleEnd);
+          Dashboard.drawChart(series, setup.targetBuffer, today, checkins);
         }
       },
 
@@ -1844,9 +1916,15 @@
           today, value
         );
 
+        const savedAt = new Date().toISOString();
+
         Storage.set('burndown_last_check', {
-          date: today, balance: value, result, savedAt: new Date().toISOString()
+          date: today, balance: value, result, savedAt
         });
+
+        CheckinHistory.save(CheckinHistory.upsert(CheckinHistory.load(), {
+          date: today, balance: value, status: result.status, savedAt
+        }));
 
         Dashboard.justCheckedIn = true;
         Dashboard.render();
@@ -1854,7 +1932,8 @@
 
       // Draws the burndown chart on the canvas element.
       // Uses vanilla canvas — no external library.
-      drawChart(series, targetBuffer, today, liveBalance, status) {
+      // checkins: this cycle's check-ins, oldest first ([{ date, balance, status }]).
+      drawChart(series, targetBuffer, today, checkins) {
         const canvas = document.getElementById('burndown-canvas');
         if (!canvas || series.length === 0) return;
 
@@ -1876,8 +1955,7 @@
         const plotH = H - PAD.top  - PAD.bottom;
 
         // Y axis range — include all balances, target buffer, and zero
-        const allVals = [...series.map(p => p.balance), targetBuffer, 0];
-        if (liveBalance !== null) allVals.push(liveBalance);
+        const allVals = [...series.map(p => p.balance), targetBuffer, 0, ...checkins.map(c => c.balance)];
         const rawMax = Math.max(...allVals);
         const rawMin = Math.min(...allVals);
         const padding = (rawMax - rawMin) * 0.15 || 100;
@@ -1951,13 +2029,44 @@
           ctx.setLineDash([]);
         }
 
-        // Live balance dot
-        if (liveBalance !== null && todayIdx >= 0) {
+        // Check-ins: map each to its day index in the series
+        const points = checkins
+          .map(c => ({ c, idx: series.findIndex(p => p.date === c.date) }))
+          .filter(p => p.idx >= 0);
+
+        // Line of best fit — 3+ check-ins only, spanning first to latest (not a forecast)
+        const fit = CheckinHistory.bestFit(points.map(p => ({ x: p.idx, y: p.c.balance })));
+        if (fit) {
+          const x0 = points[0].idx;
+          const x1 = points[points.length - 1].idx;
+          ctx.strokeStyle = 'rgba(148, 163, 184, 0.5)';
+          ctx.lineWidth   = 1.5;
+          ctx.setLineDash([6, 4]);
+          ctx.beginPath();
+          ctx.moveTo(xOf(x0), yOf(fit.intercept + fit.slope * x0));
+          ctx.lineTo(xOf(x1), yOf(fit.intercept + fit.slope * x1));
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Earlier check-ins this cycle — grey dots
+        ctx.fillStyle = '#6b7280';
+        points.slice(0, -1).forEach(p => {
+          ctx.beginPath();
+          ctx.arc(xOf(p.idx), yOf(p.c.balance), 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        // Latest check-in — keeps its status colour
+        const latest = points.length > 0 ? points[points.length - 1] : null;
+        if (latest) {
+          const status   = latest.c.status;
           const dotColor = status === 'ON_TRACK'  ? '#22c55e'
                          : status === 'MARGINAL'  ? '#f59e0b'
-                         : '#ef4444';
-          const dx = xOf(todayIdx);
-          const dy = yOf(liveBalance);
+                         : status === 'OFF_TRACK' ? '#ef4444'
+                         : '#6b7280';
+          const dx = xOf(latest.idx);
+          const dy = yOf(latest.c.balance);
 
           // Outer ring
           ctx.strokeStyle = dotColor;
@@ -2049,6 +2158,7 @@
         }
 
         App.checkSnapshotTrigger();
+        CheckinHistory.syncFromLastCheck();
 
         const setup = Storage.get('burndown_setup');
         if (setup) {
@@ -2283,7 +2393,8 @@
           burndown_version:    Storage.get('burndown_version'),
           burndown_setup:      Storage.get('burndown_setup'),
           burndown_paydays:    Storage.get('burndown_paydays'),
-          burndown_last_check: Storage.get('burndown_last_check')
+          burndown_last_check: Storage.get('burndown_last_check'),
+          burndown_checkins:   CheckinHistory.load()
         };
         const json = JSON.stringify(data, null, 2);
 
@@ -2350,6 +2461,11 @@
           errors.push(`burndown_last_check: expected object or null, found ${describe(lastCheck)}`);
         }
 
+        // Optional — backups from before Stage 7 don't have it
+        if (data.burndown_checkins !== undefined && !Array.isArray(data.burndown_checkins)) {
+          errors.push(`burndown_checkins: expected array, found ${describe(data.burndown_checkins)}`);
+        }
+
         return errors;
       },
 
@@ -2413,6 +2529,8 @@
         Storage.set('burndown_setup',      parsed.burndown_setup);
         Storage.set('burndown_paydays',    parsed.burndown_paydays);
         Storage.set('burndown_last_check', parsed.burndown_last_check);
+        CheckinHistory.save(Array.isArray(parsed.burndown_checkins) ? parsed.burndown_checkins : []);
+        CheckinHistory.syncFromLastCheck();
 
         SettingsPanel.close();
         App.checkSnapshotTrigger();
@@ -2863,6 +2981,90 @@
             )
           ];
           results.push({ scenario: 'S8: Engine uses snapshot, not live bills', pass: checks.every(c => c.pass), checks });
+        }
+
+        // ── Stage 7a: check-in history (pure helpers — no storage touched) ──
+
+        // S9: Upsert adds in date order and replaces same-date entries
+        {
+          let list = [];
+          list = CheckinHistory.upsert(list, { date: '2026-06-10', balance: 900, status: 'ON_TRACK' });
+          list = CheckinHistory.upsert(list, { date: '2026-06-05', balance: 1200, status: 'ON_TRACK' });
+          list = CheckinHistory.upsert(list, { date: '2026-06-10', balance: 850, status: 'MARGINAL' });
+          const checks = [
+            TestHarness.assert('count',           list.length,     2, 'same date replaced, not duplicated'),
+            TestHarness.assertEq('first date',    list[0].date,    '2026-06-05'),
+            TestHarness.assert('replaced balance', list[1].balance, 850)
+          ];
+          results.push({ scenario: 'S9: History upsert', pass: checks.every(c => c.pass), checks });
+        }
+
+        // S10: forCycle keeps only this cycle's check-ins (boundaries inclusive)
+        {
+          const list = [
+            { date: '2026-05-20', balance: 300 },   // previous cycle
+            { date: '2026-05-28', balance: 1800 },  // cycle start
+            { date: '2026-06-15', balance: 1000 },
+            { date: '2026-06-24', balance: 400 },   // cycle end
+            { date: '2026-06-25', balance: 1750 }   // next cycle
+          ];
+          const r = CheckinHistory.forCycle(list, cycleStart, cycleEnd);
+          const checks = [
+            TestHarness.assert('count',        r.length,  3, 'start and end inclusive'),
+            TestHarness.assertEq('first date', r[0].date, '2026-05-28'),
+            TestHarness.assertEq('last date',  r[2].date, '2026-06-24')
+          ];
+          results.push({ scenario: 'S10: History filtered to current cycle', pass: checks.every(c => c.pass), checks });
+        }
+
+        // S11: Existing last check-in is carried into history once
+        {
+          const lc = { date: '2026-06-15', balance: 1000, result: { status: 'ON_TRACK' }, savedAt: 'x' };
+          const once  = CheckinHistory.withLastCheck([], lc);
+          const twice = CheckinHistory.withLastCheck(once, lc);
+          const none  = CheckinHistory.withLastCheck([], null);
+          const checks = [
+            TestHarness.assert('seeded count',   once.length,     1),
+            TestHarness.assertEq('seeded status', once[0].status, 'ON_TRACK'),
+            TestHarness.assert('no duplicate',   twice.length,    1),
+            TestHarness.assert('null last check', none.length,    0)
+          ];
+          results.push({ scenario: 'S11: Last check-in carried into history', pass: checks.every(c => c.pass), checks });
+        }
+
+        // S12: Line of best fit
+        // Perfect line y = 100 - 10x → slope -10, intercept 100
+        // Scattered (0,100) (1,80) (2,90) → mean x 1, mean y 90, slope -5, intercept 95
+        {
+          const exact   = CheckinHistory.bestFit([{ x: 0, y: 100 }, { x: 1, y: 90 }, { x: 2, y: 80 }]);
+          const scatter = CheckinHistory.bestFit([{ x: 0, y: 100 }, { x: 1, y: 80 }, { x: 2, y: 90 }]);
+          const two     = CheckinHistory.bestFit([{ x: 0, y: 100 }, { x: 1, y: 90 }]);
+          const checks = [
+            TestHarness.assert('exact slope',       exact.slope,       -10),
+            TestHarness.assert('exact intercept',   exact.intercept,   100),
+            TestHarness.assert('scatter slope',     scatter.slope,      -5),
+            TestHarness.assert('scatter intercept', scatter.intercept,  95),
+            TestHarness.assertEq('2 points → no line', two, null)
+          ];
+          results.push({ scenario: 'S12: Line of best fit (3+ check-ins only)', pass: checks.every(c => c.pass), checks });
+        }
+
+        // S13: Restore validation — old backups (no history) still pass; bad history fails
+        {
+          const base = {
+            burndown_version: '2.0',
+            burndown_setup: { netPay: 2400, billsTransfer: 600, targetBuffer: 150, bills: [], savedAt: 'x' },
+            burndown_paydays: [],
+            burndown_last_check: null
+          };
+          const checks = [
+            TestHarness.assert('pre-Stage-7 backup errors', SettingsPanel.validateSchema(base).length, 0),
+            TestHarness.assert('with history errors',
+              SettingsPanel.validateSchema({ ...base, burndown_checkins: [] }).length, 0),
+            TestHarness.assert('bad history errors',
+              SettingsPanel.validateSchema({ ...base, burndown_checkins: 'oops' }).length, 1)
+          ];
+          results.push({ scenario: 'S13: Restore accepts old and new backups', pass: checks.every(c => c.pass), checks });
         }
 
         TestHarness.render(results);

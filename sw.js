@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'moneybox-v3.10';
+const CACHE_NAME = 'moneybox-v3.11';
 const ASSETS = [
   '/Moneybox/',
   '/Moneybox/index.html',
