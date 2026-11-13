@@ -2049,12 +2049,6 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // "Buffer" label — right end, just above the line, so it never
-        // collides with the £ labels on the Y axis
-        ctx.fillStyle  = '#4b5563';
-        ctx.font       = font(10);
-        ctx.textAlign  = 'right';
-        ctx.fillText('Buffer', PAD.left + plotW, bufY - 4 * S);
 
         // Expected balance line
         ctx.strokeStyle = '#3b82f6';
@@ -2133,6 +2127,32 @@
           ctx.beginPath();
           ctx.arc(dx, dy, 4 * S, 0, Math.PI * 2);
           ctx.fill();
+        }
+
+        // "Buffer" label — drawn last so it can avoid the check-in dots.
+        // Tries right-above, left-above, right-below, left-below the line and
+        // uses the first spot that doesn't touch a dot. Falls back to right-above.
+        {
+          ctx.font = font(10);
+          const lw = ctx.measureText('Buffer').width;
+          const lh = 10 * S;
+          const gap = 4 * S;
+          const dotR = 8 * S;   // latest dot's outer ring plus a little clearance
+          const dots = points.map(p => ({ x: xOf(p.idx), y: yOf(p.c.balance) }));
+          const spots = [
+            { x: PAD.left + plotW - lw, y: bufY - gap - lh },   // right, above
+            { x: PAD.left + gap,        y: bufY - gap - lh },   // left, above
+            { x: PAD.left + plotW - lw, y: bufY + gap },        // right, below
+            { x: PAD.left + gap,        y: bufY + gap }         // left, below
+          ];
+          const clear = r => dots.every(d =>
+            d.x + dotR < r.x || d.x - dotR > r.x + lw || d.y + dotR < r.y || d.y - dotR > r.y + lh);
+          const spot = spots.find(clear) || spots[0];
+          ctx.fillStyle    = '#4b5563';
+          ctx.textAlign    = 'left';
+          ctx.textBaseline = 'top';
+          ctx.fillText('Buffer', spot.x, spot.y);
+          ctx.textBaseline = 'alphabetic';
         }
 
         // Y axis labels — every £1,000 always; every £250 too when there's
