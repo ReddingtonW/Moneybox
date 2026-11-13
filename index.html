@@ -1200,7 +1200,7 @@
 
   <!-- ─── Debug Banner ───────────────────────────────────────── -->
   <div id="debug-banner">
-    Stage 7b · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
+    Stage 7c · version: <span id="debug-version">—</span> · view: <span id="debug-view">—</span>
     <div id="debug-error"></div>
   </div>
 
@@ -1452,6 +1452,30 @@
         const before = CheckinHistory.load();
         const after  = CheckinHistory.withLastCheck(before, Storage.get('burndown_last_check'));
         if (after !== before) CheckinHistory.save(after);
+      }
+    };
+
+    // ─── Chart Scale ─────────────────────────────────────────────
+    // Pure helpers for the Y axis (testable in the harness).
+    const ChartScale = {
+      MINOR: 250,
+      MAJOR: 1000,
+
+      // Axis runs from £0 to the highest value plus 5% headroom, rounded up
+      // to the next £250. Returns the top value and every £250 tick from £0.
+      yTicks(maxVal) {
+        const top  = Math.max(0, maxVal) * 1.05;
+        const yMax = Math.max(ChartScale.MINOR, Math.ceil(top / ChartScale.MINOR) * ChartScale.MINOR);
+        const ticks = [];
+        for (let v = 0; v <= yMax; v += ChartScale.MINOR) {
+          ticks.push({ v, major: v % ChartScale.MAJOR === 0 });
+        }
+        return { yMax, ticks };
+      },
+
+      // £0, £250, £1,000, £3,750
+      formatTick(v) {
+        return '£' + v.toLocaleString('en-GB');
       }
     };
 
@@ -1986,37 +2010,33 @@
         const plotW = W - PAD.left - PAD.right;
         const plotH = H - PAD.top  - PAD.bottom;
 
-        // Y axis range — include all balances, target buffer, and zero
-        const allVals = [...series.map(p => p.balance), targetBuffer, 0, ...checkins.map(c => c.balance)];
-        const rawMax = Math.max(...allVals);
-        const rawMin = Math.min(...allVals);
-        const padding = (rawMax - rawMin) * 0.15 || 100;
-        const yMax = rawMax + padding;
-        const yMin = rawMin - padding;
-        const yRange = yMax - yMin || 1;
+        // Y axis — always starts at £0, top rounded up to the next £250
+        const allVals = [...series.map(p => p.balance), targetBuffer, ...checkins.map(c => c.balance)];
+        const { yMax, ticks } = ChartScale.yTicks(Math.max(...allVals));
+        const yMin   = 0;
+        const yRange = yMax - yMin;
 
         const n = series.length;
 
         // Scale helpers
         const xOf = i => PAD.left + (n > 1 ? (i / (n - 1)) * plotW : plotW / 2);
-        const yOf = v => PAD.top  + plotH - ((v - yMin) / yRange) * plotH;
+        // Values below £0 are drawn on the £0 line — the axis never shows minus values
+        const yOf = v => PAD.top  + plotH - ((Math.max(v, 0) - yMin) / yRange) * plotH;
 
         // Background
         ctx.fillStyle = '#0f1117';
         ctx.fillRect(0, 0, W, H);
 
-        // Horizontal grid lines
-        ctx.strokeStyle = '#1a1d27';
-        ctx.lineWidth   = 1;
-        const gridCount = 4;
-        for (let g = 0; g <= gridCount; g++) {
-          const v = yMin + (yRange * g / gridCount);
-          const y = yOf(v);
+        // Horizontal grid lines — faint every £250 (minor), stronger every £1,000 (major)
+        ctx.lineWidth = 1;
+        ticks.forEach(t => {
+          const y = Math.round(yOf(t.v)) + 0.5;
+          ctx.strokeStyle = t.major ? '#2a2d3a' : '#181b24';
           ctx.beginPath();
           ctx.moveTo(PAD.left, y);
           ctx.lineTo(PAD.left + plotW, y);
           ctx.stroke();
-        }
+        });
 
         // Target buffer dashed line
         ctx.strokeStyle = '#374151';
@@ -2029,11 +2049,12 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // "Buffer" label on the line
-        ctx.fillStyle  = '#374151';
+        // "Buffer" label — right end, just above the line, so it never
+        // collides with the £ labels on the Y axis
+        ctx.fillStyle  = '#4b5563';
         ctx.font       = font(10);
         ctx.textAlign  = 'right';
-        ctx.fillText('Buffer', PAD.left - 4, bufY + 3);
+        ctx.fillText('Buffer', PAD.left + plotW, bufY - 4 * S);
 
         // Expected balance line
         ctx.strokeStyle = '#3b82f6';
@@ -2114,15 +2135,17 @@
           ctx.fill();
         }
 
-        // Y axis labels
+        // Y axis labels — every £1,000 always; every £250 too when there's
+        // room for them (usually tablet, rarely phone)
         ctx.fillStyle = '#555';
         ctx.font      = font(10);
         ctx.textAlign = 'right';
-        for (let g = 0; g <= gridCount; g++) {
-          const v = yMin + (yRange * g / gridCount);
-          const y = yOf(v);
-          ctx.fillText('£' + Math.round(v), PAD.left - 4, y + 3);
-        }
+        const minorGapPx   = (250 / yRange) * plotH;
+        const labelMinors  = minorGapPx >= 10 * S * 1.8;
+        ticks.forEach(t => {
+          if (!t.major && !labelMinors) return;
+          ctx.fillText(ChartScale.formatTick(t.v), PAD.left - 4 * S, yOf(t.v) + 3 * S);
+        });
 
         // X axis labels — show ~5 evenly spaced dates
         // The last date is always shown; if the previous evenly spaced label
@@ -3115,6 +3138,24 @@
               SettingsPanel.validateSchema({ ...base, burndown_checkins: 'oops' }).length, 1)
           ];
           results.push({ scenario: 'S13: Restore accepts old and new backups', pass: checks.every(c => c.pass), checks });
+        }
+
+        // S14: Y axis starts at £0 with £250 / £1,000 ticks
+        // max 4145 → ×1.05 = 4352.25 → rounds up to 4500 → 19 ticks (0..4500), majors 0,1000..4000
+        {
+          const a = ChartScale.yTicks(4145);
+          const b = ChartScale.yTicks(-120);   // all-negative data still gives a £0–£250 axis
+          const c = ChartScale.yTicks(950);    // 997.5 → 1000
+          const checks = [
+            TestHarness.assert('yMax',            a.yMax,            4500),
+            TestHarness.assert('first tick',      a.ticks[0].v,      0, 'axis starts at £0'),
+            TestHarness.assert('tick count',      a.ticks.length,    19),
+            TestHarness.assert('major count',     a.ticks.filter(t => t.major).length, 5),
+            TestHarness.assert('negative data yMax', b.yMax,         250),
+            TestHarness.assert('950 → yMax',      c.yMax,            1000),
+            TestHarness.assertEq('label format',  ChartScale.formatTick(3750), '£3,750')
+          ];
+          results.push({ scenario: 'S14: Y axis from £0 in £250 / £1,000 steps', pass: checks.every(c => c.pass), checks });
         }
 
         TestHarness.render(results);
